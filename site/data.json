@@ -1,7 +1,7 @@
 {
   "title": "Basque LLM Evaluation",
   "subtitle": "Comparative evaluation on EusTrivia, XNLIeu, BasqueGLUE-QNLI, BasqueGLUE-BEC, BasqueGLUE-WiC (multi-seed robust view)",
-  "generated_at_utc": "2026-04-23T09:42:49.736262+00:00",
+  "generated_at_utc": "2026-04-23T10:37:26.666193+00:00",
   "endpoint": "${LLAMA_SWAP_BASE_URL}",
   "evaluation_protocol": {
     "suite": "Official benchmark subset (multi-seed)",
@@ -9,7 +9,9 @@
     "sampling": "80 items per benchmark (400 total per model)",
     "decoding": "temperature=0",
     "seeds": [
-      42
+      42,
+      123,
+      777
     ],
     "benchmarks": [
       {
@@ -55,42 +57,44 @@
       "upstream_model_id": "HiTZ/Latxa-Llama-3.1-70B-Instruct",
       "release_date_utc": "2025-03-28T18:51:01Z",
       "release_source_url": "https://huggingface.co/HiTZ/Latxa-Llama-3.1-70B-Instruct",
-      "overall_accuracy": 0.6975,
-      "overall_accuracy_std": 0.0,
+      "overall_accuracy": 0.6816666666666666,
+      "overall_accuracy_std": 0.019418633662885057,
       "n_items": 400,
-      "n_seeds": 1,
+      "n_seeds": 3,
       "seed_ids": [
-        42
+        42,
+        123,
+        777
       ],
       "by_benchmark": {
         "EusTrivia": {
           "n": 80,
-          "accuracy": 0.75,
-          "accuracy_std": 0.0,
+          "accuracy": 0.7666666666666666,
+          "accuracy_std": 0.014433756729740658,
           "coverage": 1.0
         },
         "XNLIeu": {
           "n": 80,
-          "accuracy": 0.8625,
-          "accuracy_std": 0.0,
+          "accuracy": 0.8333333333333334,
+          "accuracy_std": 0.03145764348029479,
           "coverage": 1.0
         },
         "BasqueGLUE_qnli": {
           "n": 80,
-          "accuracy": 0.6125,
-          "accuracy_std": 0.0,
+          "accuracy": 0.5666666666666668,
+          "accuracy_std": 0.04389855730355309,
           "coverage": 1.0
         },
         "BasqueGLUE_bec": {
           "n": 80,
-          "accuracy": 0.675,
-          "accuracy_std": 0.0,
+          "accuracy": 0.6458333333333334,
+          "accuracy_std": 0.02602082499332669,
           "coverage": 1.0
         },
         "BasqueGLUE_wic": {
           "n": 80,
-          "accuracy": 0.5875,
-          "accuracy_std": 0.0,
+          "accuracy": 0.5958333333333333,
+          "accuracy_std": 0.038188130791298645,
           "coverage": 1.0
         }
       },
@@ -106,42 +110,44 @@
       "upstream_model_id": "Qwen/Qwen3.5-27B",
       "release_date_utc": "2026-02-24T09:41:56Z",
       "release_source_url": "https://huggingface.co/Qwen/Qwen3.5-27B",
-      "overall_accuracy": 0.645,
-      "overall_accuracy_std": 0.0,
+      "overall_accuracy": 0.655,
+      "overall_accuracy_std": 0.00901387818865995,
       "n_items": 400,
-      "n_seeds": 1,
+      "n_seeds": 3,
       "seed_ids": [
-        42
+        42,
+        123,
+        777
       ],
       "by_benchmark": {
         "EusTrivia": {
           "n": 80,
-          "accuracy": 0.625,
-          "accuracy_std": 0.0,
+          "accuracy": 0.6583333333333333,
+          "accuracy_std": 0.047324236215002306,
           "coverage": 1.0
         },
         "XNLIeu": {
           "n": 80,
           "accuracy": 0.8375,
-          "accuracy_std": 0.0,
+          "accuracy_std": 0.012500000000000011,
           "coverage": 1.0
         },
         "BasqueGLUE_qnli": {
           "n": 80,
-          "accuracy": 0.6,
-          "accuracy_std": 0.0,
+          "accuracy": 0.5541666666666667,
+          "accuracy_std": 0.040181878170803965,
           "coverage": 1.0
         },
         "BasqueGLUE_bec": {
           "n": 80,
-          "accuracy": 0.6125,
-          "accuracy_std": 0.0,
+          "accuracy": 0.6166666666666667,
+          "accuracy_std": 0.019094065395649316,
           "coverage": 1.0
         },
         "BasqueGLUE_wic": {
           "n": 80,
-          "accuracy": 0.55,
-          "accuracy_std": 0.0,
+          "accuracy": 0.6083333333333334,
+          "accuracy_std": 0.0629152869605896,
           "coverage": 1.0
         }
       },
@@ -157,42 +163,44 @@
       "upstream_model_id": "orai-nlp/Gemma-Kimu-9b-it",
       "release_date_utc": "2025-10-06T13:19:11Z",
       "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-9b-it",
-      "overall_accuracy": 0.6025,
-      "overall_accuracy_std": 0.0,
+      "overall_accuracy": 0.5908333333333334,
+      "overall_accuracy_std": 0.016072751268321608,
       "n_items": 400,
-      "n_seeds": 1,
+      "n_seeds": 3,
       "seed_ids": [
-        42
+        42,
+        123,
+        777
       ],
       "by_benchmark": {
         "EusTrivia": {
           "n": 80,
-          "accuracy": 0.5375,
-          "accuracy_std": 0.0,
+          "accuracy": 0.5625,
+          "accuracy_std": 0.04330127018922197,
           "coverage": 1.0
         },
         "XNLIeu": {
           "n": 80,
-          "accuracy": 0.7375,
-          "accuracy_std": 0.0,
+          "accuracy": 0.7416666666666667,
+          "accuracy_std": 0.019094065395649316,
           "coverage": 1.0
         },
         "BasqueGLUE_qnli": {
           "n": 80,
-          "accuracy": 0.65,
-          "accuracy_std": 0.0,
+          "accuracy": 0.6708333333333334,
+          "accuracy_std": 0.019094065395649326,
           "coverage": 1.0
         },
         "BasqueGLUE_bec": {
           "n": 80,
-          "accuracy": 0.55,
-          "accuracy_std": 0.0,
+          "accuracy": 0.4750000000000001,
+          "accuracy_std": 0.0695970545353753,
           "coverage": 1.0
         },
         "BasqueGLUE_wic": {
           "n": 80,
-          "accuracy": 0.5375,
-          "accuracy_std": 0.0,
+          "accuracy": 0.5041666666666667,
+          "accuracy_std": 0.03145764348029479,
           "coverage": 1.0
         }
       },
@@ -208,42 +216,44 @@
       "upstream_model_id": "HiTZ/Latxa-Llama-3.1-8B-Instruct",
       "release_date_utc": "2025-02-27T16:48:02Z",
       "release_source_url": "https://huggingface.co/HiTZ/Latxa-Llama-3.1-8B-Instruct",
-      "overall_accuracy": 0.55,
-      "overall_accuracy_std": 0.0,
+      "overall_accuracy": 0.5591666666666667,
+      "overall_accuracy_std": 0.008036375634160752,
       "n_items": 400,
-      "n_seeds": 1,
+      "n_seeds": 3,
       "seed_ids": [
-        42
+        42,
+        123,
+        777
       ],
       "by_benchmark": {
         "EusTrivia": {
           "n": 80,
-          "accuracy": 0.5375,
-          "accuracy_std": 0.0,
+          "accuracy": 0.5583333333333333,
+          "accuracy_std": 0.026020824993326676,
           "coverage": 1.0
         },
         "XNLIeu": {
           "n": 80,
-          "accuracy": 0.575,
-          "accuracy_std": 0.0,
+          "accuracy": 0.5666666666666665,
+          "accuracy_std": 0.038188130791298645,
           "coverage": 1.0
         },
         "BasqueGLUE_qnli": {
           "n": 80,
-          "accuracy": 0.6125,
-          "accuracy_std": 0.0,
+          "accuracy": 0.6166666666666667,
+          "accuracy_std": 0.007216878364870297,
           "coverage": 1.0
         },
         "BasqueGLUE_bec": {
           "n": 80,
-          "accuracy": 0.5125,
-          "accuracy_std": 0.0,
+          "accuracy": 0.5083333333333333,
+          "accuracy_std": 0.019094065395649343,
           "coverage": 1.0
         },
         "BasqueGLUE_wic": {
           "n": 80,
-          "accuracy": 0.5125,
-          "accuracy_std": 0.0,
+          "accuracy": 0.5458333333333333,
+          "accuracy_std": 0.0381881307912987,
           "coverage": 1.0
         }
       },
@@ -259,42 +269,44 @@
       "upstream_model_id": "orai-nlp/Gemma-Kimu-2b-it",
       "release_date_utc": "2025-10-06T13:25:43Z",
       "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-2b-it",
-      "overall_accuracy": 0.4675,
-      "overall_accuracy_std": 0.0,
+      "overall_accuracy": 0.4575,
+      "overall_accuracy_std": 0.01732050807568879,
       "n_items": 400,
-      "n_seeds": 1,
+      "n_seeds": 3,
       "seed_ids": [
-        42
+        42,
+        123,
+        777
       ],
       "by_benchmark": {
         "EusTrivia": {
           "n": 80,
-          "accuracy": 0.4875,
-          "accuracy_std": 0.0,
+          "accuracy": 0.4666666666666666,
+          "accuracy_std": 0.02602082499332665,
           "coverage": 1.0
         },
         "XNLIeu": {
           "n": 80,
-          "accuracy": 0.4125,
-          "accuracy_std": 0.0,
+          "accuracy": 0.41250000000000003,
+          "accuracy_std": 0.012499999999999983,
           "coverage": 1.0
         },
         "BasqueGLUE_qnli": {
           "n": 80,
-          "accuracy": 0.575,
-          "accuracy_std": 0.0,
+          "accuracy": 0.5708333333333333,
+          "accuracy_std": 0.019094065395649316,
           "coverage": 1.0
         },
         "BasqueGLUE_bec": {
           "n": 80,
-          "accuracy": 0.3625,
-          "accuracy_std": 0.0,
+          "accuracy": 0.3541666666666667,
+          "accuracy_std": 0.03818813079129867,
           "coverage": 1.0
         },
         "BasqueGLUE_wic": {
           "n": 80,
-          "accuracy": 0.5,
-          "accuracy_std": 0.0,
+          "accuracy": 0.48333333333333334,
+          "accuracy_std": 0.05204164998665334,
           "coverage": 1.0
         }
       },
