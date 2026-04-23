@@ -67,7 +67,8 @@ For `qwen3.5-27b`, evaluation disables thinking/reasoning mode and uses higher t
 - `eval/run_phase1_multiseed_with_b4.sh` — 4-benchmark multi-seed batch
 - `eval/summarize_multiseed.py` — aggregates per-model mean/std from per-seed JSONs
 - `eval/analyze_basqueglue_errors.py` — BasqueGLUE diagnostics
-- `site/build_site_data.py` — builds `site/data.json` from robust summary
+- `site/model_cards.json` — canonical model metadata (family, quantization, release date, source model card URL)
+- `site/build_site_data.py` — builds `site/data.json` from robust summary + model cards
 - `site/index.html` — static report UI
 
 ---

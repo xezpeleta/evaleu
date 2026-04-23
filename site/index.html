@@ -220,22 +220,18 @@
       <div class="table-wrap">
         <table>
           <thead>
-            <tr>
+            <tr id="resultsHeadRow">
               <th>#</th>
               <th>Model</th>
               <th>Quantization</th>
               <th>Overall</th>
-              <th>EusTrivia</th>
-              <th>XNLIeu</th>
-              <th>BasqueGLUE-QNLI</th>
-              <th>BasqueGLUE-BEC</th>
               <th>N</th>
             </tr>
           </thead>
           <tbody id="resultsBody"></tbody>
         </table>
       </div>
-      <div class="caption">Accuracy reported as mean ± std across random seeds, with 80 items per benchmark (320 total items per model).</div>
+      <div class="caption" id="resultsCaption">Accuracy reported as mean ± std across random seeds.</div>
     </section>
 
     <section class="section">
@@ -248,6 +244,10 @@
         <div class="plot">
           <h3>Figure 2. Accuracy profile by benchmark</h3>
           <canvas id="radarBench"></canvas>
+        </div>
+        <div class="plot">
+          <h3>Figure 3. Overall accuracy by release date</h3>
+          <canvas id="timelineOverall"></canvas>
         </div>
       </div>
     </section>
@@ -279,7 +279,20 @@
       const fullV = pctPM(mean, std);
       return `<span title="${esc(fullV)}">${esc(shortV)}</span>`;
     };
-    const titleCaseBench = (id) => id === 'BasqueGLUE_qnli' ? 'BasqueGLUE-QNLI' : id;
+    const benchLabel = (id) => ({
+      'BasqueGLUE_qnli': 'BasqueGLUE-QNLI',
+      'BasqueGLUE_bec': 'BasqueGLUE-BEC',
+      'BasqueGLUE_wic': 'BasqueGLUE-WiC'
+    }[id] || id);
+
+    const benchHeaderHTML = (id) => {
+      const label = benchLabel(id);
+      const idx = label.indexOf('-');
+      if (idx > 0) {
+        return `${esc(label.slice(0, idx))}<br>${esc(label.slice(idx + 1))}`;
+      }
+      return esc(label);
+    };
     const compactModelLabel = (name) => {
       const v = String(name || '');
       if (v.includes('Qwen 3.5 27B')) return 'Qwen 3.5 27B';
@@ -303,6 +316,20 @@
       const nSeeds = rows.length ? (rows[0].n_seeds || 1) : 1;
       const generatedUtc = data.generated_at_utc || '-';
       const generatedDate = formatUtcDate(generatedUtc);
+      const benchDefs = (data.evaluation_protocol?.benchmarks || []);
+      const benchIds = benchDefs.map(x => x.id);
+
+      const head = document.getElementById('resultsHeadRow');
+      head.innerHTML = `
+        <th>#</th>
+        <th>Model</th>
+        <th>Quantization</th>
+        <th>Overall</th>
+        ${benchIds.map(id => `<th>${benchHeaderHTML(id)}</th>`).join('')}
+        <th>N</th>
+      `;
+      document.getElementById('resultsCaption').textContent =
+        `Accuracy reported as mean ± std across random seeds, with 80 items per benchmark (${perModelN} total items per model).`;
 
       document.getElementById('metaInline').innerHTML = `
         <span>Generated: <span class="mono">${esc(generatedDate)}</span></span>
@@ -317,21 +344,23 @@
       `;
 
       const bestOverall = Math.max(...rows.map(r => r.overall_accuracy || 0));
-      const bestEusTrivia = Math.max(...rows.map(r => ((r.by_benchmark || {}).EusTrivia || {}).accuracy || 0));
-      const bestXNLIeu = Math.max(...rows.map(r => ((r.by_benchmark || {}).XNLIeu || {}).accuracy || 0));
-      const bestBasqueGLUE = Math.max(...rows.map(r => ((r.by_benchmark || {}).BasqueGLUE_qnli || {}).accuracy || 0));
-      const bestBEC = Math.max(...rows.map(r => ((r.by_benchmark || {}).BasqueGLUE_bec || {}).accuracy || 0));
+      const bestByBench = Object.fromEntries(
+        benchIds.map(id => [id, Math.max(...rows.map(r => ((r.by_benchmark || {})[id] || {}).accuracy || 0))])
+      );
       const isBest = (v, best) => Math.abs((v || 0) - (best || 0)) < 1e-12;
 
       const body = document.getElementById('resultsBody');
       rows.forEach((r, i) => {
         const b = r.by_benchmark || {};
-        const eus = (b.EusTrivia || {}).accuracy || 0;
-        const xnli = (b.XNLIeu || {}).accuracy || 0;
-        const bglue = (b.BasqueGLUE_qnli || {}).accuracy || 0;
-        const bec = (b.BasqueGLUE_bec || {}).accuracy || 0;
         const quantLabels = [];
         if (r.weights_quant) quantLabels.push(String(r.weights_quant).toUpperCase());
+        const benchCells = benchIds.map(id => {
+          const m = b[id] || {};
+          const v = m.accuracy || 0;
+          const std = m.accuracy_std || 0;
+          const cell = metricCell(v, std);
+          return `<td>${isBest(v, bestByBench[id]) ? `<span class="strong">${cell}</span>` : cell}</td>`;
+        }).join('');
         body.innerHTML += `
           <tr>
             <td>${i + 1}</td>
@@ -343,10 +372,7 @@
               ${quantLabels.map(q => `<span class="pill">${esc(q)}</span>`).join('')}
             </td>
             <td>${isBest(r.overall_accuracy, bestOverall) ? `<span class="strong">${metricCell(r.overall_accuracy, r.overall_accuracy_std)}</span>` : metricCell(r.overall_accuracy, r.overall_accuracy_std)}</td>
-            <td>${isBest(eus, bestEusTrivia) ? `<span class="strong">${metricCell(eus, (b.EusTrivia || {}).accuracy_std)}</span>` : metricCell(eus, (b.EusTrivia || {}).accuracy_std)}</td>
-            <td>${isBest(xnli, bestXNLIeu) ? `<span class="strong">${metricCell(xnli, (b.XNLIeu || {}).accuracy_std)}</span>` : metricCell(xnli, (b.XNLIeu || {}).accuracy_std)}</td>
-            <td>${isBest(bglue, bestBasqueGLUE) ? `<span class="strong">${metricCell(bglue, (b.BasqueGLUE_qnli || {}).accuracy_std)}</span>` : metricCell(bglue, (b.BasqueGLUE_qnli || {}).accuracy_std)}</td>
-            <td>${isBest(bec, bestBEC) ? `<span class="strong">${metricCell(bec, (b.BasqueGLUE_bec || {}).accuracy_std)}</span>` : metricCell(bec, (b.BasqueGLUE_bec || {}).accuracy_std)}</td>
+            ${benchCells}
             <td>${esc(r.n_items)}</td>
           </tr>
         `;
@@ -356,7 +382,7 @@
       (data.evaluation_protocol?.benchmarks || []).forEach(x => {
         protocolBody.innerHTML += `
           <tr>
-            <td class="mono">${esc(titleCaseBench(x.id))}</td>
+            <td class="mono">${esc(benchLabel(x.id))}</td>
             <td>${esc(x.task)}</td>
             <td>${esc(x.metric)}</td>
             <td>${esc(x.labels)}</td>
@@ -370,6 +396,7 @@
 
       if (window.__barChart) window.__barChart.destroy();
       if (window.__radarChart) window.__radarChart.destroy();
+      if (window.__timelineChart) window.__timelineChart.destroy();
 
       const colors = ['#7c8cff', '#43c6ec', '#7ee4a6', '#ffb56b', '#ff7f7f'];
 
@@ -416,17 +443,12 @@
         }
       });
 
-      const benchLabels = ['EusTrivia', 'XNLIeu', 'BasqueGLUE-QNLI', 'BasqueGLUE-BEC'];
+      const benchLabels = benchIds.map(id => benchLabel(id));
       const radarDatasets = rows.map((r, idx) => {
         const b = r.by_benchmark || {};
         return {
           label: r.display_name,
-          data: [
-            Math.round((((b.EusTrivia || {}).accuracy) || 0) * 1000) / 10,
-            Math.round((((b.XNLIeu || {}).accuracy) || 0) * 1000) / 10,
-            Math.round((((b.BasqueGLUE_qnli || {}).accuracy) || 0) * 1000) / 10,
-            Math.round((((b.BasqueGLUE_bec || {}).accuracy) || 0) * 1000) / 10
-          ],
+          data: benchIds.map(id => Math.round(((((b[id] || {}).accuracy) || 0) * 1000)) / 10),
           borderColor: colors[idx % colors.length],
           backgroundColor: 'transparent',
           borderWidth: 2,
@@ -475,6 +497,90 @@
           layout: { padding: 4 }
         }
       });
+
+      const timelineRows = rows
+        .filter(r => r.release_date_utc)
+        .map(r => ({
+          name: compactModelLabel(r.display_name),
+          fullName: r.display_name,
+          date: formatUtcDate(r.release_date_utc),
+          score: Math.round((r.overall_accuracy || 0) * 1000) / 10,
+          std: Math.round((r.overall_accuracy_std || 0) * 1000) / 10
+        }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      if (timelineRows.length) {
+        const pointLabelPlugin = {
+          id: 'timelinePointLabels',
+          afterDatasetsDraw(chart) {
+            const { ctx } = chart;
+            const meta = chart.getDatasetMeta(0);
+            ctx.save();
+            ctx.font = '11px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#d8deea';
+            meta.data.forEach((pt, i) => {
+              const x = pt.x + 6;
+              const y = pt.y - 8;
+              ctx.fillText(timelineRows[i].name, x, y);
+            });
+            ctx.restore();
+          }
+        };
+
+        window.__timelineChart = new Chart(document.getElementById('timelineOverall').getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: timelineRows.map(x => x.date),
+            datasets: [{
+              label: 'Overall accuracy',
+              data: timelineRows.map(x => x.score),
+              borderColor: 'rgba(124, 140, 255, 0.45)',
+              backgroundColor: '#7c8cff',
+              pointRadius: 4,
+              pointHoverRadius: 5,
+              fill: false,
+              tension: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  title: (items) => {
+                    const idx = items?.[0]?.dataIndex ?? 0;
+                    return timelineRows[idx]?.fullName || '';
+                  },
+                  label: (item) => {
+                    const idx = item?.dataIndex ?? 0;
+                    const r = timelineRows[idx];
+                    return `${r.date} · ${r.score.toFixed(1)}% ± ${r.std.toFixed(1)}%`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                title: { display: true, text: 'Release date (UTC)', color: '#cfd6e3' },
+                ticks: { color: '#d4dbe7', maxRotation: 0, minRotation: 0, font: { size: 11 } },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+              },
+              y: {
+                position: 'left',
+                beginAtZero: true,
+                max: 100,
+                title: { display: true, text: 'Overall accuracy (%)', color: '#cfd6e3' },
+                ticks: { color: '#d4dbe7', font: { size: 11 } },
+                grid: { color: 'rgba(255,255,255,0.06)' }
+              }
+            }
+          },
+          plugins: [pointLabelPlugin]
+        });
+      }
     }).catch(err => {
       document.getElementById('subtitle').textContent = 'Failed to load data.json';
       document.getElementById('metaInline').innerHTML = `<span class="mono">${esc(String(err))}</span>`;

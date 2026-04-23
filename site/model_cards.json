@@ -1,0 +1,62 @@
+{
+  "kimu-2b": {
+    "display_name": "Kimu 2B",
+    "family": "Gemma-Kimu",
+    "params": "2B",
+    "weights_quant": "Q8_0",
+    "kv_cache": "default",
+    "upstream_model_id": "orai-nlp/Gemma-Kimu-2b-it",
+    "release_date_utc": "2025-10-06T13:25:43Z",
+    "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-2b-it"
+  },
+  "kimu-9b": {
+    "display_name": "Kimu 9B",
+    "family": "Gemma-Kimu",
+    "params": "9B",
+    "weights_quant": "Q8_0",
+    "kv_cache": "default",
+    "upstream_model_id": "orai-nlp/Gemma-Kimu-9b-it",
+    "release_date_utc": "2025-10-06T13:19:11Z",
+    "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-9b-it"
+  },
+  "latxa-8b": {
+    "display_name": "Latxa 8B",
+    "family": "Llama 3.1",
+    "params": "8B",
+    "weights_quant": "F16",
+    "kv_cache": "f16/f16",
+    "upstream_model_id": "HiTZ/Latxa-Llama-3.1-8B-Instruct",
+    "release_date_utc": "2025-02-27T16:48:02Z",
+    "release_source_url": "https://huggingface.co/HiTZ/Latxa-Llama-3.1-8B-Instruct"
+  },
+  "latxa-70b": {
+    "display_name": "Latxa 70B",
+    "family": "Llama 3.1",
+    "params": "70B",
+    "weights_quant": "Q8_0",
+    "kv_cache": "default",
+    "upstream_model_id": "HiTZ/Latxa-Llama-3.1-70B-Instruct",
+    "release_date_utc": "2025-03-28T18:51:01Z",
+    "release_source_url": "https://huggingface.co/HiTZ/Latxa-Llama-3.1-70B-Instruct"
+  },
+  "qwen3.5-27b": {
+    "display_name": "Qwen 3.5 27B (no-thinking)",
+    "family": "Qwen 3.5",
+    "params": "27B",
+    "weights_quant": "Q8_0",
+    "kv_cache": "bf16/bf16",
+    "upstream_model_id": "Qwen/Qwen3.5-27B",
+    "release_date_utc": "2026-02-24T09:41:56Z",
+    "release_source_url": "https://huggingface.co/Qwen/Qwen3.5-27B"
+  },
+  "qwen3.5-27b-eval": {
+    "display_name": "Qwen 3.5 27B (no-thinking)",
+    "family": "Qwen 3.5",
+    "params": "27B",
+    "weights_quant": "Q8_0",
+    "kv_cache": "bf16/bf16",
+    "upstream_model_id": "Qwen/Qwen3.5-27B",
+    "release_date_utc": "2026-02-24T09:41:56Z",
+    "release_source_url": "https://huggingface.co/Qwen/Qwen3.5-27B"
+  }
+}

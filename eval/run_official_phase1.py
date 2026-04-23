@@ -286,6 +286,41 @@ def build_benchmark4_template_items(limit: int, seed: int) -> List[Dict[str, Any
     return items
 
 
+def build_benchmark5_template_items(limit: int, seed: int) -> List[Dict[str, Any]]:
+    """
+    Benchmark-5 implementation (lexical semantics): BasqueGLUE WiC
+    Labels: false / true
+    """
+    ds = load_dataset("orai-nlp/basqueGLUE", "wic", trust_remote_code=True)["test"]
+    names = ds.features["label"].names
+    rng = random.Random(seed)
+    idxs = list(range(len(ds)))
+    rng.shuffle(idxs)
+    idxs = idxs[:limit]
+
+    items = []
+    for i in idxs:
+        row = ds[int(i)]
+        prompt = (
+            "Esan hitzak bi esaldietan esanahi bera duen ala ez. "
+            "Erantzun ETIKETA BAKARRAREKIN: true edo false.\n"
+            "Ez eman azalpenik. Ez erabili beste hitzik.\n"
+            f"Hitza: {row['word']}\n"
+            f"Esaldia 1: {row['sentence1']}\n"
+            f"Esaldia 2: {row['sentence2']}\n"
+            "Erantzuna (true/false):"
+        )
+        items.append({
+            "bench": "BasqueGLUE_wic",
+            "id": f"bg_wic_{row['idx']}",
+            "prompt": prompt,
+            "gold": int(row["label"]),
+            "label_names": list(names),
+            "meta": {"word": row.get("word")},
+        })
+    return items
+
+
 def _postprocess_eustrivia_candidates(items: List[Dict[str, Any]]) -> None:
     if not items:
         return
@@ -323,6 +358,15 @@ def build_benchmark_registry(args: argparse.Namespace) -> List[Dict[str, Any]]:
                 "id": "BasqueGLUE_bec",
                 "limit": args.limit_b4_template,
                 "builder": build_benchmark4_template_items,
+            }
+        )
+
+    if args.enable_b5_template or args.limit_b5_template > 0:
+        specs.append(
+            {
+                "id": "BasqueGLUE_wic",
+                "limit": args.limit_b5_template,
+                "builder": build_benchmark5_template_items,
             }
         )
 
@@ -385,6 +429,14 @@ def score_item(item: Dict[str, Any], answer: str) -> Tuple[int | None, bool]:
             pred = 2
         else:
             pred = _label_from_text(answer, label_names)
+    elif item["bench"] == "BasqueGLUE_wic":
+        t = _normalize(answer)
+        if re.search(r"\b(true|berdin(a)?|bai|same)\b", t):
+            pred = 1
+        elif re.search(r"\b(false|desberdin(a)?|ezberdin(a)?|different)\b", t):
+            pred = 0
+        else:
+            pred = _label_from_text(answer, label_names)
     else:
         pred = _label_from_text(answer, label_names)
 
@@ -430,6 +482,8 @@ def main():
     ap.add_argument("--limit-bglue-qnli", type=int, default=100)
     ap.add_argument("--enable-b4-template", action="store_true", help="Enable Benchmark-4 onboarding template hook")
     ap.add_argument("--limit-b4-template", type=int, default=0, help="Sample limit for Benchmark-4 template")
+    ap.add_argument("--enable-b5-template", action="store_true", help="Enable Benchmark-5 onboarding template hook")
+    ap.add_argument("--limit-b5-template", type=int, default=0, help="Sample limit for Benchmark-5 template")
     ap.add_argument("--out", default="eval/official_phase1/results.json")
     args = ap.parse_args()
 

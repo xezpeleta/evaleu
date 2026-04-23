@@ -10,3 +10,8 @@ __pycache__/
 # Local eval outputs
 eval/multi/
 eval/results_*.json
+eval/official_phase1/
+eval/official_phase1_with_b5/
+eval/official_phase1_multiseed_with_b5/
+eval/official_phase1_multiseed/
+eval/official_phase1_multiseed_with_b4/

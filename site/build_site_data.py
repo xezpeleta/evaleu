@@ -3,52 +3,11 @@ import json
 from pathlib import Path
 from datetime import datetime, timezone
 
-MODEL_META = {
-    "latxa-70b": {
-        "display_name": "Latxa 70B",
-        "family": "Llama 3.1",
-        "params": "70B",
-        "weights_quant": "Q8_0",
-        "kv_cache": "default",
-    },
-    "qwen3.5-27b-eval": {
-        "display_name": "Qwen 3.5 27B (no-thinking)",
-        "family": "Qwen 3.5",
-        "params": "27B",
-        "weights_quant": "Q8_0",
-        "kv_cache": "bf16/bf16",
-    },
-    "qwen3.5-27b": {
-        "display_name": "Qwen 3.5 27B (no-thinking)",
-        "family": "Qwen 3.5",
-        "params": "27B",
-        "weights_quant": "Q8_0",
-        "kv_cache": "bf16/bf16",
-    },
-    "kimu-9b": {
-        "display_name": "Kimu 9B",
-        "family": "Gemma-Kimu",
-        "params": "9B",
-        "weights_quant": "Q8_0",
-        "kv_cache": "default",
-    },
-    "latxa-8b": {
-        "display_name": "Latxa 8B",
-        "family": "Llama 3.1",
-        "params": "8B",
-        "weights_quant": "F16",
-        "kv_cache": "f16/f16",
-    },
-    "kimu-2b": {
-        "display_name": "Kimu 2B",
-        "family": "Gemma-Kimu",
-        "params": "2B",
-        "weights_quant": "Q8_0",
-        "kv_cache": "default",
-    },
-}
+def load_model_cards(root: Path):
+    model_cards_path = root / "site" / "model_cards.json"
+    return json.loads(model_cards_path.read_text(encoding="utf-8"))
 
-BENCHMARKS = [
+ALL_BENCHMARKS = [
     {
         "id": "EusTrivia",
         "task": "Multiple-choice factual and cultural knowledge in Basque",
@@ -73,25 +32,42 @@ BENCHMARKS = [
         "metric": "Accuracy",
         "labels": "N / NEU / P",
     },
+    {
+        "id": "BasqueGLUE_wic",
+        "task": "Word-in-Context disambiguation from BasqueGLUE WiC",
+        "metric": "Accuracy",
+        "labels": "false / true",
+    },
 ]
-BENCHMARK_IDS = [b["id"] for b in BENCHMARKS]
 
 
 def main():
     root = Path(__file__).resolve().parents[1]
-    summary_path = root / "eval" / "official_phase1_multiseed_with_b4" / "summary.json"
+    summary_path = root / "eval" / "official_phase1_multiseed_with_b5" / "summary.json"
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    model_cards = load_model_cards(root)
+
+    models_map = summary.get("models", {})
+    present_benchmark_ids = {
+        b
+        for s in models_map.values()
+        for b in (s.get("benchmarks", {}) or {}).keys()
+    }
+    benchmark_ids = [b["id"] for b in ALL_BENCHMARKS if b["id"] in present_benchmark_ids]
 
     rows = []
     all_seed_ids = set()
 
-    for model_id, s in summary.get("models", {}).items():
-        meta = MODEL_META.get(model_id, {
+    for model_id, s in models_map.items():
+        meta = model_cards.get(model_id, {
             "display_name": model_id,
             "family": "unknown",
             "params": "unknown",
             "weights_quant": "unknown",
             "kv_cache": "unknown",
+            "upstream_model_id": "unknown",
+            "release_date_utc": None,
+            "release_source_url": None,
         })
 
         runs = s.get("runs", [])
@@ -101,7 +77,7 @@ def main():
 
         bench_means = s.get("benchmarks", {})
         by_benchmark = {}
-        for b in BENCHMARK_IDS:
+        for b in benchmark_ids:
             bm = bench_means.get(b, {})
             by_benchmark[b] = {
                 "n": 80,
@@ -117,9 +93,12 @@ def main():
             "params": meta["params"],
             "weights_quant": meta["weights_quant"],
             "kv_cache": meta["kv_cache"],
+            "upstream_model_id": meta.get("upstream_model_id"),
+            "release_date_utc": meta.get("release_date_utc"),
+            "release_source_url": meta.get("release_source_url"),
             "overall_accuracy": s.get("overall_mean", 0.0),
             "overall_accuracy_std": s.get("overall_std", 0.0),
-            "n_items": 320,
+            "n_items": 80 * len(by_benchmark),
             "n_seeds": len(runs),
             "seed_ids": sorted([r.get("seed") for r in runs if r.get("seed") is not None]),
             "by_benchmark": by_benchmark,
@@ -128,18 +107,29 @@ def main():
 
     rows.sort(key=lambda x: x["overall_accuracy"], reverse=True)
 
+    benchmark_defs = [b for b in ALL_BENCHMARKS if b["id"] in benchmark_ids]
+    benchmark_label_list = ", ".join([
+        {
+            "BasqueGLUE_qnli": "BasqueGLUE-QNLI",
+            "BasqueGLUE_bec": "BasqueGLUE-BEC",
+            "BasqueGLUE_wic": "BasqueGLUE-WiC",
+        }.get(b["id"], b["id"])
+        for b in benchmark_defs
+    ])
+    n_items_per_model = 80 * len(benchmark_defs)
+
     out = {
         "title": "Basque LLM Evaluation",
-        "subtitle": "Comparative evaluation on EusTrivia, XNLIeu, BasqueGLUE-QNLI, and BasqueGLUE-BEC (multi-seed robust view)",
+        "subtitle": f"Comparative evaluation on {benchmark_label_list} (multi-seed robust view)",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "endpoint": "${LLAMA_SWAP_BASE_URL}",
         "evaluation_protocol": {
             "suite": "Official benchmark subset (multi-seed)",
             "metric": "Accuracy",
-            "sampling": "80 items per benchmark (320 total per model)",
+            "sampling": f"80 items per benchmark ({n_items_per_model} total per model)",
             "decoding": "temperature=0",
             "seeds": sorted(all_seed_ids),
-            "benchmarks": BENCHMARKS,
+            "benchmarks": benchmark_defs,
         },
         "results": rows,
     }
