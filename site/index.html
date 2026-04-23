@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basque LLM Evaluation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #08090a;
+      --panel: #101214;
+      --panel-soft: #14171b;
+      --text: #f4f6f8;
+      --muted: #a4acb8;
+      --line: rgba(255,255,255,0.07);
+      --line-soft: rgba(255,255,255,0.05);
+      --accent: #7170ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 700px at 10% -20%, #1a1e2a 0%, #08090a 50%), var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      font-feature-settings: "cv01", "ss03";
+      line-height: 1.45;
+    }
+
+    .wrap {
+      width: min(1240px, 100% - 40px);
+      margin: 0 auto;
+      padding: 34px 0 76px;
+    }
+
+    .hero {
+      border: 1px solid var(--line-soft);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      padding: 22px 22px 16px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 42px;
+      font-weight: 600;
+      letter-spacing: -0.95px;
+      line-height: 1.02;
+      color: #f7f8f8;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: #c8ced8;
+      font-size: 14px;
+    }
+
+    .meta-inline {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .meta-card {
+      border: 1px solid var(--line-soft);
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      padding: 12px;
+      min-height: 80px;
+    }
+
+    .meta-k { font-size: 12px; color: var(--muted); }
+    .meta-v { margin-top: 3px; font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
+
+    .section {
+      margin-top: 16px;
+      border: 1px solid var(--line-soft);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 14px;
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.22px;
+      color: #f2f4f7;
+    }
+
+    .table-wrap {
+      border: 1px solid var(--line-soft);
+      border-radius: 10px;
+      overflow: auto;
+      background: #0f1114;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead th {
+      padding: 11px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(255,255,255,0.02);
+      color: #aeb6c2;
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.045em;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line-soft);
+      color: #e6eaf0;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: rgba(255,255,255,0.012); }
+
+    .model-main { font-weight: 500; }
+    .model-sub { color: #8f98a7; font-size: 12px; margin-top: 2px; }
+
+    .mono {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-block;
+      margin: 3px 6px 0 0;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: #cfd5df;
+      font-size: 11px;
+      white-space: nowrap;
+      background: rgba(255,255,255,0.01);
+    }
+
+    .strong { font-weight: 600; color: #ffffff; }
+
+    .caption {
+      margin-top: 10px;
+      color: #9ba4b3;
+      font-size: 12px;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .plot {
+      border: 1px solid var(--line-soft);
+      border-radius: 10px;
+      background: var(--panel-soft);
+      padding: 10px;
+      height: 390px;
+      overflow: hidden;
+    }
+
+    .plot h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #e9edf3;
+      letter-spacing: -0.1px;
+    }
+
+    .plot canvas {
+      width: 100% !important;
+      height: 330px !important;
+      max-height: 330px;
+      display: block;
+    }
+
+    .protocol-table td:first-child { white-space: nowrap; }
+
+    @media (max-width: 1040px) {
+      .meta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .chart-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .wrap { width: min(1240px, 100% - 22px); }
+      h1 { font-size: 34px; }
+      .meta-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1 id="title">Basque LLM Evaluation</h1>
+      <div class="subtitle" id="subtitle">Loading summary...</div>
+      <div class="meta-inline" id="metaInline"></div>
+      <div class="meta-grid" id="metaGrid"></div>
+    </section>
+
+    <section class="section">
+      <h2>Table 1. Main comparative results</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Model</th>
+              <th>Quantization</th>
+              <th>Overall</th>
+              <th>EusTrivia</th>
+              <th>XNLIeu</th>
+              <th>BasqueGLUE-QNLI</th>
+              <th>BasqueGLUE-BEC</th>
+              <th>N</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </div>
+      <div class="caption">Accuracy reported as mean ± std across random seeds, with 80 items per benchmark (320 total items per model).</div>
+    </section>
+
+    <section class="section">
+      <h2>Figures</h2>
+      <div class="chart-grid">
+        <div class="plot">
+          <h3>Figure 1. Overall accuracy by model</h3>
+          <canvas id="barOverall"></canvas>
+        </div>
+        <div class="plot">
+          <h3>Figure 2. Accuracy profile by benchmark</h3>
+          <canvas id="radarBench"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Evaluation protocol</h2>
+      <div class="table-wrap">
+        <table class="protocol-table">
+          <thead>
+            <tr>
+              <th>Benchmark</th>
+              <th>What is measured</th>
+              <th>Metric</th>
+              <th>Label space</th>
+            </tr>
+          </thead>
+          <tbody id="protocolBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const pct = (x) => ((x || 0) * 100).toFixed(1) + '%';
+    const pctPM = (mean, std) => `${((mean || 0) * 100).toFixed(1)}% ± ${((std || 0) * 100).toFixed(1)}%`;
+    const metricCell = (mean, std) => {
+      const shortV = pct(mean);
+      const fullV = pctPM(mean, std);
+      return `<span title="${esc(fullV)}">${esc(shortV)}</span>`;
+    };
+    const titleCaseBench = (id) => id === 'BasqueGLUE_qnli' ? 'BasqueGLUE-QNLI' : id;
+    const compactModelLabel = (name) => {
+      const v = String(name || '');
+      if (v.includes('Qwen 3.5 27B')) return 'Qwen 3.5 27B';
+      return v;
+    };
+    const formatUtcDate = (iso) => {
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return String(iso || '-');
+      return d.toISOString().slice(0, 10);
+    };
+
+    fetch('./data.json').then(r => r.json()).then(data => {
+      const rows = data.results || [];
+      document.getElementById('title').textContent = data.title || 'Basque LLM Evaluation';
+      document.getElementById('subtitle').textContent = data.subtitle || 'Comparative evaluation on EusTrivia, XNLIeu, and BasqueGLUE-QNLI';
+
+      const mean = rows.length ? rows.reduce((a, b) => a + (b.overall_accuracy || 0), 0) / rows.length : 0;
+      const meanStd = rows.length ? rows.reduce((a, b) => a + (b.overall_accuracy_std || 0), 0) / rows.length : 0;
+      const best = rows.length ? rows[0].display_name : '-';
+      const perModelN = rows.length ? rows[0].n_items : 0;
+      const nSeeds = rows.length ? (rows[0].n_seeds || 1) : 1;
+      const generatedUtc = data.generated_at_utc || '-';
+      const generatedDate = formatUtcDate(generatedUtc);
+
+      document.getElementById('metaInline').innerHTML = `
+        <span>Generated: <span class="mono">${esc(generatedDate)}</span></span>
+        <span>Seeds: <span class="mono">n=${esc(nSeeds)}</span></span>
+      `;
+
+      document.getElementById('metaGrid').innerHTML = `
+        <div class="meta-card"><div class="meta-k">Models evaluated</div><div class="meta-v">${rows.length}</div></div>
+        <div class="meta-card"><div class="meta-k">Items per model</div><div class="meta-v">${perModelN}</div></div>
+        <div class="meta-card"><div class="meta-k">Mean overall accuracy</div><div class="meta-v"><span title="${esc(pctPM(mean, meanStd))}">${pct(mean)}</span></div></div>
+        <div class="meta-card"><div class="meta-k">Best model</div><div class="meta-v">${esc(best)}</div></div>
+      `;
+
+      const bestOverall = Math.max(...rows.map(r => r.overall_accuracy || 0));
+      const bestEusTrivia = Math.max(...rows.map(r => ((r.by_benchmark || {}).EusTrivia || {}).accuracy || 0));
+      const bestXNLIeu = Math.max(...rows.map(r => ((r.by_benchmark || {}).XNLIeu || {}).accuracy || 0));
+      const bestBasqueGLUE = Math.max(...rows.map(r => ((r.by_benchmark || {}).BasqueGLUE_qnli || {}).accuracy || 0));
+      const bestBEC = Math.max(...rows.map(r => ((r.by_benchmark || {}).BasqueGLUE_bec || {}).accuracy || 0));
+      const isBest = (v, best) => Math.abs((v || 0) - (best || 0)) < 1e-12;
+
+      const body = document.getElementById('resultsBody');
+      rows.forEach((r, i) => {
+        const b = r.by_benchmark || {};
+        const eus = (b.EusTrivia || {}).accuracy || 0;
+        const xnli = (b.XNLIeu || {}).accuracy || 0;
+        const bglue = (b.BasqueGLUE_qnli || {}).accuracy || 0;
+        const bec = (b.BasqueGLUE_bec || {}).accuracy || 0;
+        const quantLabels = [];
+        if (r.weights_quant) quantLabels.push(String(r.weights_quant).toUpperCase());
+        body.innerHTML += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>
+              <div class="model-main">${esc(r.display_name)}</div>
+              <div class="model-sub mono">${esc(r.model_id)}</div>
+            </td>
+            <td>
+              ${quantLabels.map(q => `<span class="pill">${esc(q)}</span>`).join('')}
+            </td>
+            <td>${isBest(r.overall_accuracy, bestOverall) ? `<span class="strong">${metricCell(r.overall_accuracy, r.overall_accuracy_std)}</span>` : metricCell(r.overall_accuracy, r.overall_accuracy_std)}</td>
+            <td>${isBest(eus, bestEusTrivia) ? `<span class="strong">${metricCell(eus, (b.EusTrivia || {}).accuracy_std)}</span>` : metricCell(eus, (b.EusTrivia || {}).accuracy_std)}</td>
+            <td>${isBest(xnli, bestXNLIeu) ? `<span class="strong">${metricCell(xnli, (b.XNLIeu || {}).accuracy_std)}</span>` : metricCell(xnli, (b.XNLIeu || {}).accuracy_std)}</td>
+            <td>${isBest(bglue, bestBasqueGLUE) ? `<span class="strong">${metricCell(bglue, (b.BasqueGLUE_qnli || {}).accuracy_std)}</span>` : metricCell(bglue, (b.BasqueGLUE_qnli || {}).accuracy_std)}</td>
+            <td>${isBest(bec, bestBEC) ? `<span class="strong">${metricCell(bec, (b.BasqueGLUE_bec || {}).accuracy_std)}</span>` : metricCell(bec, (b.BasqueGLUE_bec || {}).accuracy_std)}</td>
+            <td>${esc(r.n_items)}</td>
+          </tr>
+        `;
+      });
+
+      const protocolBody = document.getElementById('protocolBody');
+      (data.evaluation_protocol?.benchmarks || []).forEach(x => {
+        protocolBody.innerHTML += `
+          <tr>
+            <td class="mono">${esc(titleCaseBench(x.id))}</td>
+            <td>${esc(x.task)}</td>
+            <td>${esc(x.metric)}</td>
+            <td>${esc(x.labels)}</td>
+          </tr>
+        `;
+      });
+
+      const labels = rows.map(r => compactModelLabel(r.display_name));
+      const fullLabels = rows.map(r => r.display_name);
+      const overall = rows.map(r => Math.round((r.overall_accuracy || 0) * 1000) / 10);
+
+      if (window.__barChart) window.__barChart.destroy();
+      if (window.__radarChart) window.__radarChart.destroy();
+
+      const colors = ['#7c8cff', '#43c6ec', '#7ee4a6', '#ffb56b', '#ff7f7f'];
+
+      window.__barChart = new Chart(document.getElementById('barOverall').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            data: overall,
+            backgroundColor: colors,
+            borderWidth: 0,
+            borderRadius: 6,
+            barPercentage: 0.72,
+            categoryPercentage: 0.78
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: (items) => {
+                  const idx = items?.[0]?.dataIndex ?? 0;
+                  return fullLabels[idx] || labels[idx] || '';
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#d4dbe7', maxRotation: 22, minRotation: 22, font: { size: 11 } },
+              grid: { color: 'rgba(255,255,255,0.05)' }
+            },
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: { color: '#d4dbe7', font: { size: 11 } },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            }
+          }
+        }
+      });
+
+      const benchLabels = ['EusTrivia', 'XNLIeu', 'BasqueGLUE-QNLI', 'BasqueGLUE-BEC'];
+      const radarDatasets = rows.map((r, idx) => {
+        const b = r.by_benchmark || {};
+        return {
+          label: r.display_name,
+          data: [
+            Math.round((((b.EusTrivia || {}).accuracy) || 0) * 1000) / 10,
+            Math.round((((b.XNLIeu || {}).accuracy) || 0) * 1000) / 10,
+            Math.round((((b.BasqueGLUE_qnli || {}).accuracy) || 0) * 1000) / 10,
+            Math.round((((b.BasqueGLUE_bec || {}).accuracy) || 0) * 1000) / 10
+          ],
+          borderColor: colors[idx % colors.length],
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          pointRadius: 2.2,
+          pointHoverRadius: 2.8
+        };
+      });
+
+      window.__radarChart = new Chart(document.getElementById('radarBench').getContext('2d'), {
+        type: 'radar',
+        data: { labels: benchLabels, datasets: radarDatasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: '#d8deea',
+                boxWidth: 10,
+                boxHeight: 10,
+                padding: 10,
+                font: { size: 11 }
+              }
+            }
+          },
+          scales: {
+            r: {
+              min: 0,
+              max: 100,
+              ticks: {
+                stepSize: 20,
+                color: '#cfd6e3',
+                backdropColor: 'rgba(0,0,0,0)',
+                font: { size: 11 }
+              },
+              pointLabels: {
+                color: '#dce3ef',
+                font: { size: 12, weight: 500 }
+              },
+              grid: { color: 'rgba(255,255,255,0.10)' },
+              angleLines: { color: 'rgba(255,255,255,0.10)' }
+            }
+          },
+          layout: { padding: 4 }
+        }
+      });
+    }).catch(err => {
+      document.getElementById('subtitle').textContent = 'Failed to load data.json';
+      document.getElementById('metaInline').innerHTML = `<span class="mono">${esc(String(err))}</span>`;
+    });
+  </script>
+</body>
+</html>

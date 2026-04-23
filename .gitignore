@@ -1,0 +1,12 @@
+# Secrets / local env
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+
+# Local eval outputs
+eval/multi/
+eval/results_*.json

@@ -1,0 +1,2599 @@
+{
+  "base_url": "${LLAMA_SWAP_BASE_URL}",
+  "model": "qwen3.5-27b",
+  "suite": "official_phase1",
+  "max_tokens": 4096,
+  "timeout": 300,
+  "limits": {
+    "EusTrivia": 80,
+    "XNLIeu": 80,
+    "BasqueGLUE_qnli": 80,
+    "BasqueGLUE_bec": 80
+  },
+  "overall_accuracy": 0.671875,
+  "n_items": 320,
+  "by_benchmark": {
+    "EusTrivia": {
+      "n": 80,
+      "accuracy": 0.7125,
+      "coverage": 1.0
+    },
+    "XNLIeu": {
+      "n": 80,
+      "accuracy": 0.85,
+      "coverage": 1.0
+    },
+    "BasqueGLUE_qnli": {
+      "n": 80,
+      "accuracy": 0.525,
+      "coverage": 1.0
+    },
+    "BasqueGLUE_bec": {
+      "n": 80,
+      "accuracy": 0.6,
+      "coverage": 1.0
+    }
+  },
+  "items": [
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_528",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_638",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_744",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 3,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1517",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1220",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_350",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_41",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_844",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_963",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1420",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_531",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1254",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1511",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_312",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_361",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1159",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_662",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_685",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1235",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_460",
+      "answer": "A) Andres",
+      "pred_label": 0,
+      "gold_label": 3,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_821",
+      "answer": "A) \"Sumadorak\"",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_852",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1423",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_894",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_668",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_906",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1227",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_480",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1064",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_0",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_999",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1015",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1397",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1360",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1445",
+      "answer": "A) Iturburua",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_967",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_85",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1145",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1695",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_539",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_504",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_634",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_91",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_152",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1322",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1273",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1134",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1703",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1197",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1537",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_857",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1401",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1424",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_839",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_10",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_560",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_232",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_172",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_461",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_822",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1476",
+      "answer": "D) Goñi II.a",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_310",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1298",
+      "answer": "A) Kamioi bat",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_755",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_675",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_489",
+      "answer": "A) Areatzan",
+      "pred_label": 0,
+      "gold_label": 3,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_297",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_719",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_937",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_711",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_117",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1687",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1523",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1037",
+      "answer": "C",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_567",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1544",
+      "answer": "A",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1073",
+      "answer": "D",
+      "pred_label": 3,
+      "gold_label": 3,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_400",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_1170",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "EusTrivia",
+      "id": "eustrivia_749",
+      "answer": "B",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_367",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_268",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_193",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_428",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_430",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_387",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_46",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_580",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_380",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_602",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_328",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_27",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_587",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_473",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_529",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_125",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_86",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_266",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_20",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_499",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_468",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_610",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_24",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_301",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_520",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_438",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_401",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_441",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_300",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_492",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_278",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_477",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_338",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_427",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_306",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_409",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_165",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_83",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_349",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_218",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_384",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_442",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_19",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_33",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_57",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_607",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_388",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_120",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_100",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_579",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_246",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_484",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_614",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_495",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_119",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_77",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_406",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_562",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_161",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_222",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_457",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_402",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_42",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_497",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_378",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_543",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_130",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_574",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_440",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_374",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_101",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_25",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_12",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_131",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_136",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_439",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_324",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_368",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_185",
+      "answer": "contradiction",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "XNLIeu",
+      "id": "xnli_469",
+      "answer": "neutral",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_186",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_33",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_80",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_51",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_138",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_181",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_174",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_201",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_142",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_123",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_47",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_28",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_83",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_214",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_172",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_76",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_14",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_40",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_151",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_23",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_237",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_116",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_57",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_97",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_167",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_217",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_205",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_231",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_188",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_6",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_178",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_158",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_187",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_148",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_92",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_119",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_117",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_221",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_166",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_204",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_107",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_15",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_218",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_90",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_200",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_64",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_93",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_74",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_52",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_195",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_222",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_190",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_145",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_226",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_121",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_104",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_88",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_154",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_50",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_4",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_209",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_39",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_152",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_3",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_124",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_109",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_42",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_194",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_199",
+      "answer": "entailment",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_60",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_202",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_7",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_182",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_46",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_63",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_131",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_105",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_18",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_160",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_qnli",
+      "id": "bg_qnli_234",
+      "answer": "not_entailment",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_816",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_161",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_597",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_581",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_676",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1141",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_782",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1091",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_483",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_759",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_840",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_726",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_772",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_134",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_395",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_779",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_662",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_147",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_477",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1053",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_940",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_185",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_839",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_632",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_902",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_498",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1189",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1272",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_621",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_444",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_900",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_907",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1298",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_741",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_244",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_241",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_825",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_814",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_923",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_58",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1045",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_465",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1167",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_5",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_162",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_195",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_534",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_416",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_115",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1186",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1235",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1171",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_514",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_949",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_802",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_930",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_326",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_293",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_192",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_637",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_602",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1118",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_110",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_690",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_88",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1005",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_73",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1138",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_379",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_996",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 0,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_684",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_55",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_805",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 2,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_83",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_968",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 2,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_967",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_283",
+      "answer": "N",
+      "pred_label": 0,
+      "gold_label": 0,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1281",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 1,
+      "ok": false
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_962",
+      "answer": "NEU",
+      "pred_label": 1,
+      "gold_label": 1,
+      "ok": true
+    },
+    {
+      "bench": "BasqueGLUE_bec",
+      "id": "bg_bec_1182",
+      "answer": "P",
+      "pred_label": 2,
+      "gold_label": 0,
+      "ok": false
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{"id":"geo_capital","task_type":"short_qa","prompt_eu":"Zein da Euskadiko hiriburua? Erantzun labur eta zuzena.","expected_any":["vitoria-gasteiz","gasteiz"]}
+{"id":"geo_provinces","task_type":"list","prompt_eu":"Zein dira Euskal Autonomia Erkidegoko hiru lurralde historikoak?","expected_keywords":["araba","bizkaia","gipuzkoa"],"min_keyword_hits":3}
+{"id":"lang_family","task_type":"short_qa","prompt_eu":"Euskara zein hizkuntza-familiatakoa da?","expected_any":["hizkuntza isolatua","isolatua","language isolate"]}
+{"id":"grammar_alignment","task_type":"short_qa","prompt_eu":"Euskararen kasu-sistema nagusian, zein da lerrokadura mota?","expected_keywords":["ergatibo","absolutibo"],"min_keyword_hits":2}
+{"id":"translation_kaixo","task_type":"translation","prompt_eu":"Itzuli ingelesera: \"Kaixo, zer moduz?\"","expected_any":["hello, how are you?","hi, how are you?"]}
+{"id":"translation_guardia","task_type":"translation","prompt_eu":"Itzuli gaztelaniara: \"Egun on\"","expected_any":["buenos días","buen dia","buen día"]}
+{"id":"mcq_mountain","task_type":"mcq","prompt_eu":"Aukeratu erantzun zuzena (A/B/C): Zein mendi dago Euskal Herrian?\nA) Everest\nB) Anboto\nC) Kilimanjaro","expected_option":"B","expected_keywords":["anboto"]}
+{"id":"classification_sentiment_pos","task_type":"classification","prompt_eu":"Sailkatu mezu hau (positiboa/negatiboa/neutrala): \"Gaurko tailerra bikaina izan da\"","expected_any":["positiboa","positive"]}
+{"id":"classification_sentiment_neg","task_type":"classification","prompt_eu":"Sailkatu mezu hau (positiboa/negatiboa/neutrala): \"Zerbitzua oso txarra izan da\"","expected_any":["negatiboa","negative"]}
+{"id":"reasoning_simple","task_type":"reasoning","prompt_eu":"Anek 3 sagar ditu eta beste 2 erosten ditu. Zenbat sagar ditu guztira? Erantzun zenbakiarekin bakarrik.","expected_any":["5"]}
