@@ -65,6 +65,10 @@ For `qwen3.5-27b`, evaluation disables thinking/reasoning mode and uses higher t
 - `eval/run_phase1_multiseed.sh` — 3-benchmark multi-seed batch
 - `eval/run_phase1_all_models_with_b4.sh` — 4-benchmark single-seed all-model batch
 - `eval/run_phase1_multiseed_with_b4.sh` — 4-benchmark multi-seed batch
+- `eval/run_phase1_all_models_with_b5.sh` — 5-benchmark single-seed all-model batch
+- `eval/run_phase1_multiseed_with_b5.sh` — 5-benchmark multi-seed batch
+- `eval/run_phase1_all_models_with_b6.sh` — 6-benchmark single-seed all-model batch
+- `eval/run_phase1_multiseed_with_b6.sh` — 6-benchmark multi-seed batch
 - `eval/summarize_multiseed.py` — aggregates per-model mean/std from per-seed JSONs
 - `eval/analyze_basqueglue_errors.py` — BasqueGLUE diagnostics
 - `site/model_cards.json` — canonical model metadata (family, quantization, release date, source model card URL)
@@ -73,12 +77,12 @@ For `qwen3.5-27b`, evaluation disables thinking/reasoning mode and uses higher t
 
 ---
 
-## Reproduce current website data (4 benchmarks, multi-seed)
+## Reproduce current website data (5 benchmarks, multi-seed)
 
 From repo root:
 
 ```bash
-./eval/run_phase1_multiseed_with_b4.sh
+./eval/run_phase1_multiseed_with_b5.sh
 python3 site/build_site_data.py
 python3 -m http.server 8787
 ```

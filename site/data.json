@@ -1,7 +1,7 @@
 {
   "title": "Basque LLM Evaluation",
   "subtitle": "Comparative evaluation on EusTrivia, XNLIeu, BasqueGLUE-QNLI, BasqueGLUE-BEC, BasqueGLUE-WiC (multi-seed robust view)",
-  "generated_at_utc": "2026-04-23T09:18:10.541668+00:00",
+  "generated_at_utc": "2026-04-23T09:42:49.736262+00:00",
   "endpoint": "${LLAMA_SWAP_BASE_URL}",
   "evaluation_protocol": {
     "suite": "Official benchmark subset (multi-seed)",

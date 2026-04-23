@@ -38,6 +38,12 @@ ALL_BENCHMARKS = [
         "metric": "Accuracy",
         "labels": "false / true",
     },
+    {
+        "id": "BasqueGLUE_intent",
+        "task": "Intent classification from BasqueGLUE Intent",
+        "metric": "Accuracy",
+        "labels": "12 intent classes",
+    },
 ]
 
 
@@ -113,6 +119,7 @@ def main():
             "BasqueGLUE_qnli": "BasqueGLUE-QNLI",
             "BasqueGLUE_bec": "BasqueGLUE-BEC",
             "BasqueGLUE_wic": "BasqueGLUE-WiC",
+            "BasqueGLUE_intent": "BasqueGLUE-Intent",
         }.get(b["id"], b["id"])
         for b in benchmark_defs
     ])

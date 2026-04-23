@@ -321,6 +321,42 @@ def build_benchmark5_template_items(limit: int, seed: int) -> List[Dict[str, Any
     return items
 
 
+def build_benchmark6_template_items(limit: int, seed: int) -> List[Dict[str, Any]]:
+    """
+    Benchmark-6 implementation (intent classification): BasqueGLUE Intent
+    Labels: 12 intent classes
+    """
+    ds = load_dataset("orai-nlp/basqueGLUE", "intent", trust_remote_code=True)["test"]
+    names = ds.features["label"].names
+    rng = random.Random(seed)
+    idxs = list(range(len(ds)))
+    rng.shuffle(idxs)
+    idxs = idxs[:limit]
+
+    label_block = "\n".join([f"{i}: {name}" for i, name in enumerate(names)])
+
+    items = []
+    for i in idxs:
+        row = ds[int(i)]
+        prompt = (
+            "Sailkatu erabiltzailearen asmoa (intent).\n"
+            "Aukeratu zerrendako etiketa zuzena eta erantzun ZENBAKI BAKARRAREKIN (0-11), besterik ez.\n"
+            "Ez eman azalpenik. Ez erabili etiketa testurik.\n"
+            f"Etiketak:\n{label_block}\n\n"
+            f"Testua: {row['text']}\n"
+            "Erantzuna (0-11):"
+        )
+        items.append({
+            "bench": "BasqueGLUE_intent",
+            "id": f"bg_intent_{row['idx']}",
+            "prompt": prompt,
+            "gold": int(row["label"]),
+            "label_names": list(names),
+            "meta": {},
+        })
+    return items
+
+
 def _postprocess_eustrivia_candidates(items: List[Dict[str, Any]]) -> None:
     if not items:
         return
@@ -367,6 +403,15 @@ def build_benchmark_registry(args: argparse.Namespace) -> List[Dict[str, Any]]:
                 "id": "BasqueGLUE_wic",
                 "limit": args.limit_b5_template,
                 "builder": build_benchmark5_template_items,
+            }
+        )
+
+    if args.enable_b6_template or args.limit_b6_template > 0:
+        specs.append(
+            {
+                "id": "BasqueGLUE_intent",
+                "limit": args.limit_b6_template,
+                "builder": build_benchmark6_template_items,
             }
         )
 
@@ -437,6 +482,14 @@ def score_item(item: Dict[str, Any], answer: str) -> Tuple[int | None, bool]:
             pred = 0
         else:
             pred = _label_from_text(answer, label_names)
+    elif item["bench"] == "BasqueGLUE_intent":
+        m = re.search(r"\b(\d{1,2})\b", answer)
+        if m:
+            idx = int(m.group(1))
+            if 0 <= idx < len(label_names):
+                pred = idx
+        if pred is None:
+            pred = _label_from_text(answer, label_names)
     else:
         pred = _label_from_text(answer, label_names)
 
@@ -484,6 +537,8 @@ def main():
     ap.add_argument("--limit-b4-template", type=int, default=0, help="Sample limit for Benchmark-4 template")
     ap.add_argument("--enable-b5-template", action="store_true", help="Enable Benchmark-5 onboarding template hook")
     ap.add_argument("--limit-b5-template", type=int, default=0, help="Sample limit for Benchmark-5 template")
+    ap.add_argument("--enable-b6-template", action="store_true", help="Enable Benchmark-6 onboarding template hook")
+    ap.add_argument("--limit-b6-template", type=int, default=0, help="Sample limit for Benchmark-6 template")
     ap.add_argument("--out", default="eval/official_phase1/results.json")
     args = ap.parse_args()
 
