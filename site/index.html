@@ -204,7 +204,7 @@
 
     .chart-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 12px;
     }
 
@@ -223,6 +223,31 @@
       font-weight: 600;
       color: #e9edf3;
       letter-spacing: -0.1px;
+    }
+
+    .group-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      margin: 0 0 8px;
+      align-items: center;
+    }
+
+    .group-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #d8deea;
+      white-space: nowrap;
+    }
+
+    .group-legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(255,255,255,0.22);
+      display: inline-block;
     }
 
     .plot canvas {
@@ -250,9 +275,8 @@
   <div class="wrap">
     <section class="hero">
       <h1 id="title">Basque LLM Evaluation</h1>
-      <div class="subtitle" id="subtitle">Loading summary...</div>
+      <div class="subtitle" id="subtitle">A public benchmark dashboard for comparing local LLM performance in Basque language tasks.</div>
       <div class="meta-inline" id="metaInline"></div>
-      <div class="meta-grid" id="metaGrid"></div>
     </section>
 
     <section class="section">
@@ -282,6 +306,7 @@
       <div class="chart-grid">
         <div class="plot">
           <h3>Figure 1. Overall accuracy by model</h3>
+          <div id="barGroupLegend" class="group-legend" aria-label="Figure 1 group legend"></div>
           <canvas id="barOverall"></canvas>
         </div>
         <div class="plot">
@@ -371,12 +396,8 @@
     fetch('./data.json').then(r => r.json()).then(data => {
       const rows = data.results || [];
       document.getElementById('title').textContent = data.title || 'Basque LLM Evaluation';
-      document.getElementById('subtitle').textContent = data.subtitle || 'Comparative evaluation on EusTrivia, XNLIeu, and BasqueGLUE-QNLI';
+      document.getElementById('subtitle').textContent = 'A public benchmark dashboard for comparing local LLM performance in Basque language tasks.';
 
-      const mean = rows.length ? rows.reduce((a, b) => a + (b.overall_accuracy || 0), 0) / rows.length : 0;
-      const meanStd = rows.length ? rows.reduce((a, b) => a + (b.overall_accuracy_std || 0), 0) / rows.length : 0;
-      const best = rows.length ? rows[0].display_name : '-';
-      const perModelN = rows.length ? rows[0].n_items : 0;
       const nSeeds = rows.length ? (rows[0].n_seeds || 1) : 1;
       const generatedUtc = data.generated_at_utc || '-';
       const generatedDate = formatUtcDate(generatedUtc);
@@ -388,13 +409,6 @@
       document.getElementById('metaInline').innerHTML = `
         <span>Generated: <span class="mono">${esc(generatedDate)}</span></span>
         <span>Seeds: <span class="mono">n=${esc(nSeeds)}</span></span>
-      `;
-
-      document.getElementById('metaGrid').innerHTML = `
-        <div class="meta-card"><div class="meta-k">Models evaluated</div><div class="meta-v">${rows.length}</div></div>
-        <div class="meta-card"><div class="meta-k">Items per model</div><div class="meta-v">${perModelN}</div></div>
-        <div class="meta-card"><div class="meta-k">Mean overall accuracy</div><div class="meta-v"><span title="${esc(pctPM(mean, meanStd))}">${pct(mean)}</span></div></div>
-        <div class="meta-card"><div class="meta-k">Best model</div><div class="meta-v">${esc(best)}</div></div>
       `;
 
       const head = document.getElementById('resultsHeadRow');
@@ -515,7 +529,75 @@
       if (window.__radarChart) window.__radarChart.destroy();
       if (window.__timelineChart) window.__timelineChart.destroy();
 
-      const colors = ['#7c8cff', '#43c6ec', '#7ee4a6', '#ffb56b', '#ff7f7f'];
+      const sizeCategoryColors = {
+        '<4B': '#2563eb',   // vivid blue
+        '7-9B': '#f97316',  // vivid orange
+        '27-32B': '#16a34a',// vivid green
+        '70B': '#a855f7',   // vivid purple
+        'other': '#94a3b8'
+      };
+
+      const inferModelSizeB = (row) => {
+        const txt = `${row?.display_name || ''} ${row?.model_id || ''}`;
+        const m = txt.match(/(\d+(?:\.\d+)?)\s*[bB]\b/);
+        return m ? Number(m[1]) : null;
+      };
+
+      const modelSizeCategory = (row) => {
+        const s = inferModelSizeB(row);
+        if (s == null) return 'other';
+        if (s <= 4) return '<4B';
+        if (s >= 7 && s <= 9) return '7-9B';
+        if (s >= 27 && s <= 32) return '27-32B';
+        if (s >= 70) return '70B';
+        return 'other';
+      };
+
+      const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+      const shadeHex = (hex, delta) => {
+        const h = (hex || '').replace('#', '');
+        if (!/^[0-9a-fA-F]{6}$/.test(h)) return hex;
+        const toCh = (i) => parseInt(h.slice(i, i + 2), 16);
+        const apply = (c) => {
+          const out = delta >= 0
+            ? c + (255 - c) * delta
+            : c * (1 + delta);
+          return clamp(Math.round(out), 0, 255).toString(16).padStart(2, '0');
+        };
+        return `#${apply(toCh(0))}${apply(toCh(2))}${apply(toCh(4))}`;
+      };
+
+      const rowKey = (r) => `${r?.model_id || ''}::${r?.display_name || ''}`;
+      const groupedRows = rows.reduce((acc, r) => {
+        const g = modelSizeCategory(r);
+        (acc[g] ||= []).push(r);
+        return acc;
+      }, {});
+
+      const modelColorMap = new Map();
+      Object.entries(groupedRows).forEach(([group, groupRows]) => {
+        const base = sizeCategoryColors[group] || sizeCategoryColors.other;
+        const n = groupRows.length;
+        groupRows.forEach((r, idx) => {
+          // Keep groups distinct (base hue), then vary shade per model in the same group.
+          const delta = n <= 1 ? 0 : ((idx / (n - 1)) - 0.5) * 0.46; // ~[-0.23, +0.23]
+          modelColorMap.set(rowKey(r), shadeHex(base, delta));
+        });
+      });
+
+      const rowColor = (r) => modelColorMap.get(rowKey(r)) || (sizeCategoryColors[modelSizeCategory(r)] || sizeCategoryColors.other);
+      const barColors = rows.map(r => rowColor(r));
+
+      const groupLegendOrder = ['<4B', '7-9B', '27-32B', '70B'];
+      const barGroupLegend = document.getElementById('barGroupLegend');
+      if (barGroupLegend) {
+        barGroupLegend.innerHTML = groupLegendOrder.map(label => `
+          <span class="group-legend-item">
+            <span class="group-legend-swatch" style="background:${sizeCategoryColors[label]}"></span>
+            ${esc(label)}
+          </span>
+        `).join('');
+      }
 
       window.__barChart = new Chart(document.getElementById('barOverall').getContext('2d'), {
         type: 'bar',
@@ -523,7 +605,7 @@
           labels,
           datasets: [{
             data: overall,
-            backgroundColor: colors,
+            backgroundColor: barColors,
             borderWidth: 0,
             borderRadius: 6,
             barPercentage: 0.72,
@@ -566,7 +648,7 @@
         return {
           label: r.display_name,
           data: benchIds.map(id => Math.round(((((b[id] || {}).accuracy) || 0) * 1000)) / 10),
-          borderColor: colors[idx % colors.length],
+          borderColor: barColors[idx] || sizeCategoryColors.other,
           backgroundColor: 'transparent',
           borderWidth: 2,
           pointRadius: 2.2,
@@ -622,7 +704,8 @@
           fullName: r.display_name,
           date: formatUtcDate(r.release_date_utc),
           score: Math.round((r.overall_accuracy || 0) * 1000) / 10,
-          std: Math.round((r.overall_accuracy_std || 0) * 1000) / 10
+          std: Math.round((r.overall_accuracy_std || 0) * 1000) / 10,
+          color: rowColor(r)
         }))
         .sort((a, b) => a.date.localeCompare(b.date));
 
@@ -651,12 +734,12 @@
             datasets: [{
               label: 'Overall accuracy',
               data: timelineRows.map(x => x.score),
-              borderColor: 'rgba(124, 140, 255, 0.45)',
-              backgroundColor: '#7c8cff',
+              showLine: false,
+              borderWidth: 0,
+              pointBackgroundColor: timelineRows.map(x => x.color),
+              pointBorderColor: timelineRows.map(x => x.color),
               pointRadius: 4,
-              pointHoverRadius: 5,
-              fill: false,
-              tension: 0
+              pointHoverRadius: 5
             }]
           },
           options: {
