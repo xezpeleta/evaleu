@@ -31,6 +31,7 @@ run_model() {
 run_model "kimu-2b" "$OUT_DIR/kimu-2b.json"
 run_model "kimu-9b" "$OUT_DIR/kimu-9b.json"
 run_model "latxa-8b" "$OUT_DIR/latxa-8b.json"
+run_model "latxa-qwen3-vl-4b" "$OUT_DIR/latxa-qwen3-vl-4b.json"
 run_model "latxa-qwen3-vl-8b" "$OUT_DIR/latxa-qwen3-vl-8b.json"
 run_model "latxa-qwen3-vl-32b" "$OUT_DIR/latxa-qwen3-vl-32b.json"
 run_model "latxa-70b" "$OUT_DIR/latxa-70b.json"

@@ -26,7 +26,7 @@ def tail_lines(path: Path, n: int = 12):
 def main():
     ap = argparse.ArgumentParser(description='Report progress of weekend all-benchmark run')
     ap.add_argument('--out-dir', default='eval/official_multiseed_allbench_weekend')
-    ap.add_argument('--models-csv', default='kimu-2b,kimu-9b,latxa-8b,latxa-qwen3-vl-8b,latxa-qwen3-vl-32b,latxa-70b,qwen3.5-27b')
+    ap.add_argument('--models-csv', default='kimu-2b,kimu-9b,latxa-8b,latxa-qwen3-vl-4b,latxa-qwen3-vl-8b,latxa-qwen3-vl-32b,latxa-70b,qwen3.5-27b')
     ap.add_argument('--seeds-csv', default='42,123,777')
     ap.add_argument('--tail', type=int, default=10)
     args = ap.parse_args()
