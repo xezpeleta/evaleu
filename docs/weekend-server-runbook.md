@@ -36,7 +36,7 @@ Expected artifacts:
 
 ## 3) Launch weekend full run
 
-Default run: 5 models × 3 seeds × 9 benchmarks × 80 items.
+Default run: 6 models × 3 seeds × 9 benchmarks × 80 items.
 
 ```bash
 ./eval/run_weekend_all_bench_multiseed.sh

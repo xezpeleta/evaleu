@@ -11,6 +11,7 @@ The website is a **robust multi-seed** view (mean across seeds; std on hover), a
 - `qwen3.5-27b` (evaluated in no-thinking mode)
 - `kimu-9b`
 - `latxa-8b`
+- `latxa-qwen3-vl-8b`
 - `kimu-2b`
 
 ---

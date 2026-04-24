@@ -40,6 +40,7 @@ run_model() {
 run_model "kimu-2b"
 run_model "kimu-9b"
 run_model "latxa-8b"
+run_model "latxa-qwen3-vl-8b"
 run_model "latxa-70b"
 run_model "qwen3.5-27b"
 
