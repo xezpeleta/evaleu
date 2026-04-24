@@ -148,7 +148,11 @@ def main():
             "upstream_model_id": "unknown",
             "release_date_utc": None,
             "release_source_url": None,
+            "site_visibility": "published",
         })
+
+        if meta.get("site_visibility", "published") != "published":
+            continue
 
         runs = s.get("runs", [])
         for r in runs:

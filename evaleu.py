@@ -244,23 +244,42 @@ def cmd_server(args: argparse.Namespace) -> int:
 
 def cmd_model(args: argparse.Namespace) -> int:
     cards = load_model_cards()
+    existing = cards.get(args.id, {})
     if args.id in cards and not args.force:
         raise SystemExit(f"Model '{args.id}' already exists. Use --force to overwrite.")
 
-    display_name = args.display_name
+    def pick(field: str, arg_value: str | None, default: str | None = None) -> str:
+        if arg_value is not None:
+            return arg_value
+        if field in existing and existing[field] is not None:
+            return existing[field]
+        if default is not None:
+            return default
+        raise SystemExit(f"Missing required field for model '{args.id}': --{field.replace('_', '-')}")
+
+    display_name = pick("display_name", args.display_name)
     suffix = "(no-thinking)"
     if args.no_thinking and suffix not in display_name:
         display_name = f"{display_name} {suffix}".strip()
 
+    site_visibility = existing.get("site_visibility", "published")
+    if args.site_visibility is not None:
+        site_visibility = args.site_visibility
+    elif args.hide or args.draft:
+        site_visibility = "draft"
+    elif args.unhide or args.published:
+        site_visibility = "published"
+
     cards[args.id] = {
         "display_name": display_name,
-        "family": args.family,
-        "params": args.params,
-        "weights_quant": args.weights_quant,
-        "kv_cache": args.kv_cache,
-        "upstream_model_id": args.upstream_model_id,
-        "release_date_utc": args.release_date_utc,
-        "release_source_url": args.release_source_url,
+        "family": pick("family", args.family),
+        "params": pick("params", args.params),
+        "weights_quant": pick("weights_quant", args.weights_quant, default="F16"),
+        "kv_cache": pick("kv_cache", args.kv_cache, default="f16/f16"),
+        "upstream_model_id": pick("upstream_model_id", args.upstream_model_id),
+        "release_date_utc": pick("release_date_utc", args.release_date_utc),
+        "release_source_url": pick("release_source_url", args.release_source_url),
+        "site_visibility": site_visibility,
     }
     save_model_cards(cards)
     print(f"Added/updated model card: {args.id}")
@@ -469,15 +488,26 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_model = sub.add_parser("model", help="Add or update a model card entry")
     p_model.add_argument("--id", required=True)
-    p_model.add_argument("--display-name", required=True)
-    p_model.add_argument("--family", required=True)
-    p_model.add_argument("--params", required=True)
-    p_model.add_argument("--upstream-model-id", required=True)
-    p_model.add_argument("--release-date-utc", required=True)
-    p_model.add_argument("--release-source-url", required=True)
-    p_model.add_argument("--weights-quant", default="F16")
-    p_model.add_argument("--kv-cache", default="f16/f16")
+    p_model.add_argument("--display-name", default=None)
+    p_model.add_argument("--family", default=None)
+    p_model.add_argument("--params", default=None)
+    p_model.add_argument("--upstream-model-id", default=None)
+    p_model.add_argument("--release-date-utc", default=None)
+    p_model.add_argument("--release-source-url", default=None)
+    p_model.add_argument("--weights-quant", default=None)
+    p_model.add_argument("--kv-cache", default=None)
     p_model.add_argument("--no-thinking", action="store_true", help="Append '(no-thinking)' to display name")
+    visibility_group = p_model.add_mutually_exclusive_group()
+    visibility_group.add_argument(
+        "--site-visibility",
+        choices=["published", "draft"],
+        default=None,
+        help="Website visibility state (published or draft)",
+    )
+    visibility_group.add_argument("--hide", action="store_true", help="Alias for --site-visibility draft")
+    visibility_group.add_argument("--unhide", action="store_true", help="Alias for --site-visibility published")
+    visibility_group.add_argument("--draft", action="store_true", help="Alias for --site-visibility draft")
+    visibility_group.add_argument("--published", action="store_true", help="Alias for --site-visibility published")
     p_model.add_argument("--force", action="store_true")
     p_model.set_defaults(func=cmd_model)
 

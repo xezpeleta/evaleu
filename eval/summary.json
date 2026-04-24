@@ -505,6 +505,107 @@
         }
       }
     },
+    "latxa-qwen3-vl-32b-q8": {
+      "runs": [
+        {
+          "seed": 42,
+          "overall": 0.7027777777777777,
+          "by_benchmark": {
+            "EusTrivia": 0.675,
+            "XNLIeu": 0.85,
+            "BasqueGLUE_qnli": 0.6625,
+            "BasqueGLUE_bec": 0.425,
+            "BasqueGLUE_wic": 0.55,
+            "BasqueGLUE_intent": 0.95,
+            "LatxaEval_eusexams": 0.675,
+            "LatxaEval_eusproficiency": 0.675,
+            "LatxaEval_eusreading": 0.8625
+          },
+          "file": "/home/xezpeleta/Dev/xezpeleta/evaleu/eval/latxa-qwen3-vl-32b-q8_seed42.json"
+        },
+        {
+          "seed": 123,
+          "overall": 0.6986111111111111,
+          "by_benchmark": {
+            "EusTrivia": 0.675,
+            "XNLIeu": 0.8375,
+            "BasqueGLUE_qnli": 0.5625,
+            "BasqueGLUE_bec": 0.4625,
+            "BasqueGLUE_wic": 0.6875,
+            "BasqueGLUE_intent": 0.9625,
+            "LatxaEval_eusexams": 0.6625,
+            "LatxaEval_eusproficiency": 0.6,
+            "LatxaEval_eusreading": 0.8375
+          },
+          "file": "/home/xezpeleta/Dev/xezpeleta/evaleu/eval/latxa-qwen3-vl-32b-q8_seed123.json"
+        },
+        {
+          "seed": 777,
+          "overall": 0.7041666666666667,
+          "by_benchmark": {
+            "EusTrivia": 0.6875,
+            "XNLIeu": 0.825,
+            "BasqueGLUE_qnli": 0.625,
+            "BasqueGLUE_bec": 0.3,
+            "BasqueGLUE_wic": 0.6875,
+            "BasqueGLUE_intent": 0.9625,
+            "LatxaEval_eusexams": 0.6375,
+            "LatxaEval_eusproficiency": 0.7375,
+            "LatxaEval_eusreading": 0.875
+          },
+          "file": "/home/xezpeleta/Dev/xezpeleta/evaleu/eval/latxa-qwen3-vl-32b-q8_seed777.json"
+        }
+      ],
+      "overall_mean": 0.7018518518518518,
+      "overall_std": 0.0028912027770363296,
+      "benchmarks": {
+        "EusTrivia": {
+          "mean": 0.6791666666666667,
+          "std": 0.007216878364870297,
+          "n": 3
+        },
+        "XNLIeu": {
+          "mean": 0.8375,
+          "std": 0.012500000000000011,
+          "n": 3
+        },
+        "BasqueGLUE_qnli": {
+          "mean": 0.6166666666666667,
+          "std": 0.05051814855409224,
+          "n": 3
+        },
+        "BasqueGLUE_bec": {
+          "mean": 0.3958333333333333,
+          "std": 0.08508574106942558,
+          "n": 3
+        },
+        "BasqueGLUE_wic": {
+          "mean": 0.6416666666666667,
+          "std": 0.07938566201357351,
+          "n": 3
+        },
+        "BasqueGLUE_intent": {
+          "mean": 0.9583333333333334,
+          "std": 0.007216878364870361,
+          "n": 3
+        },
+        "LatxaEval_eusexams": {
+          "mean": 0.6583333333333333,
+          "std": 0.019094065395649375,
+          "n": 3
+        },
+        "LatxaEval_eusproficiency": {
+          "mean": 0.6708333333333334,
+          "std": 0.06884463184107631,
+          "n": 3
+        },
+        "LatxaEval_eusreading": {
+          "mean": 0.8583333333333334,
+          "std": 0.019094065395649326,
+          "n": 3
+        }
+      }
+    },
     "latxa-qwen3-vl-32b": {
       "runs": [
         {
@@ -1011,5 +1112,5 @@
       }
     }
   },
-  "n_runs": 30
+  "n_runs": 33
 }

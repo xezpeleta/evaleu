@@ -50,14 +50,15 @@
     "release_source_url": "https://huggingface.co/HiTZ/Latxa-Qwen3-VL-8B-Instruct"
   },
   "latxa-qwen3-vl-32b": {
-    "display_name": "Latxa Qwen3 VL 32B",
+    "display_name": "Latxa Qwen3 VL 32B (F16)",
     "family": "Qwen3-VL (Latxa)",
     "params": "32B",
     "weights_quant": "F16",
     "kv_cache": "f16/f16",
     "upstream_model_id": "HiTZ/Latxa-Qwen3-VL-32B-Instruct",
     "release_date_utc": "2026-02-19T08:19:00Z",
-    "release_source_url": "https://huggingface.co/HiTZ/Latxa-Qwen3-VL-32B-Instruct"
+    "release_source_url": "https://huggingface.co/HiTZ/Latxa-Qwen3-VL-32B-Instruct",
+    "site_visibility": "draft"
   },
   "latxa-70b": {
     "display_name": "Latxa 70B",
@@ -98,5 +99,16 @@
     "upstream_model_id": "google/gemma-4-31B-it",
     "release_date_utc": "2026-03-11T18:22:36Z",
     "release_source_url": "https://huggingface.co/google/gemma-4-31B-it"
+  },
+  "latxa-qwen3-vl-32b-q8": {
+    "display_name": "Latxa Qwen3 VL 32B (no-thinking)",
+    "family": "Qwen3-VL (Latxa)",
+    "params": "32B",
+    "weights_quant": "Q8_0",
+    "kv_cache": "f16/f16",
+    "upstream_model_id": "HiTZ/Latxa-Qwen3-VL-32B-Instruct",
+    "release_date_utc": "2026-02-19T08:19:00Z",
+    "release_source_url": "https://huggingface.co/HiTZ/Latxa-Qwen3-VL-32B-Instruct",
+    "site_visibility": "published"
   }
 }
