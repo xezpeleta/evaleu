@@ -93,7 +93,7 @@
     "display_name": "Gemma 4 31B",
     "family": "Gemma 4",
     "params": "31B",
-    "weights_quant": "F16",
+    "weights_quant": "Q8_0",
     "kv_cache": "f16/f16",
     "upstream_model_id": "google/gemma-4-31B-it",
     "release_date_utc": "2026-03-11T18:22:36Z",
