@@ -7,7 +7,7 @@ cd "$ROOT_DIR"
 OUT_DIR="${OUT_DIR:-eval/official_multiseed_allbench_weekend}"
 SUMMARY_PATH="$OUT_DIR/summary.json"
 SEEDS_CSV="${SEEDS_CSV:-42,123,777}"
-MODELS_CSV="${MODELS_CSV:-kimu-2b,kimu-9b,latxa-8b,latxa-qwen3-vl-8b,latxa-70b,qwen3.5-27b}"
+MODELS_CSV="${MODELS_CSV:-kimu-2b,kimu-9b,latxa-8b,latxa-qwen3-vl-8b,latxa-qwen3-vl-32b,latxa-70b,qwen3.5-27b}"
 
 LIMIT_EUSTRIVIA="${LIMIT_EUSTRIVIA:-80}"
 LIMIT_XNLI="${LIMIT_XNLI:-80}"

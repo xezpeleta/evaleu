@@ -39,6 +39,16 @@
     "release_date_utc": "2026-02-19T08:51:04Z",
     "release_source_url": "https://huggingface.co/HiTZ/Latxa-Qwen3-VL-8B-Instruct"
   },
+  "latxa-qwen3-vl-32b": {
+    "display_name": "Latxa Qwen3 VL 32B",
+    "family": "Qwen3-VL (Latxa)",
+    "params": "32B",
+    "weights_quant": "F16",
+    "kv_cache": "f16/f16",
+    "upstream_model_id": "HiTZ/Latxa-Qwen3-VL-32B-Instruct",
+    "release_date_utc": "2026-02-19T08:19:00Z",
+    "release_source_url": "https://huggingface.co/HiTZ/Latxa-Qwen3-VL-32B-Instruct"
+  },
   "latxa-70b": {
     "display_name": "Latxa 70B",
     "family": "Llama 3.1",

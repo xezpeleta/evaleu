@@ -8,7 +8,7 @@ OUT_DIR="eval/official_phase1_multiseed_with_b5"
 mkdir -p "$OUT_DIR"
 
 SEEDS=(42 123 777)
-MODELS=("kimu-2b" "kimu-9b" "latxa-8b" "latxa-qwen3-vl-8b" "latxa-70b" "qwen3.5-27b")
+MODELS=("kimu-2b" "kimu-9b" "latxa-8b" "latxa-qwen3-vl-8b" "latxa-qwen3-vl-32b" "latxa-70b" "qwen3.5-27b")
 
 run_one() {
   local model="$1"
