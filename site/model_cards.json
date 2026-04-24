@@ -78,5 +78,25 @@
     "upstream_model_id": "Qwen/Qwen3.5-27B",
     "release_date_utc": "2026-02-24T09:41:56Z",
     "release_source_url": "https://huggingface.co/Qwen/Qwen3.5-27B"
+  },
+  "qwen3.6-27b": {
+    "display_name": "Qwen 3.6 27B (no-thinking)",
+    "family": "Qwen 3.6",
+    "params": "27B",
+    "weights_quant": "Q8_0",
+    "kv_cache": "bf16/bf16",
+    "upstream_model_id": "Qwen/Qwen3.6-27B",
+    "release_date_utc": "2026-04-24T00:00:00Z",
+    "release_source_url": "https://huggingface.co/Qwen/Qwen3.6-27B"
+  },
+  "gemma4-31b": {
+    "display_name": "Gemma 4 31B",
+    "family": "Gemma 4",
+    "params": "31B",
+    "weights_quant": "F16",
+    "kv_cache": "f16/f16",
+    "upstream_model_id": "google/gemma-4-31B-it",
+    "release_date_utc": "2026-03-11T18:22:36Z",
+    "release_source_url": "https://huggingface.co/google/gemma-4-31B-it"
   }
 }

@@ -66,7 +66,16 @@ def _extract_answer(msg: Dict[str, Any]) -> str:
     return lines[-1] if lines else ""
 
 
-def chat_completion(base_url: str, model: str, prompt: str, temperature: float, max_tokens: int, timeout: int, retries: int = 2) -> str:
+def chat_completion(
+    base_url: str,
+    model: str,
+    prompt: str,
+    temperature: float,
+    max_tokens: int,
+    timeout: int,
+    disable_thinking: bool = False,
+    retries: int = 2,
+) -> str:
     url = base_url.rstrip("/") + "/v1/chat/completions"
     payload = {
         "model": model,
@@ -81,8 +90,9 @@ def chat_completion(base_url: str, model: str, prompt: str, temperature: float, 
         "max_tokens": max_tokens,
     }
 
-    # Qwen reasoning control for llama-server chat template
-    if model.startswith("qwen"):
+    # Reasoning control for llama-server chat template.
+    # Keep legacy qwen default (thinking off) and allow explicit override for any model.
+    if disable_thinking or model.startswith("qwen"):
         payload["chat_template_kwargs"] = {"enable_thinking": False}
 
     last_err = None
@@ -705,6 +715,7 @@ def main():
     ap.add_argument("--model", required=True)
     ap.add_argument("--temperature", type=float, default=0.0)
     ap.add_argument("--max-tokens", type=int, default=None)
+    ap.add_argument("--disable-thinking", action="store_true", help="Set chat_template_kwargs.enable_thinking=false")
     ap.add_argument("--timeout", type=int, default=None, help="request timeout seconds (per call)")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--limit-eustrivia", type=int, default=100)
@@ -733,7 +744,15 @@ def main():
 
     preds: List[Pred] = []
     for i, it in enumerate(items, 1):
-        ans = chat_completion(base_url, args.model, it["prompt"], args.temperature, max_tokens, timeout=timeout)
+        ans = chat_completion(
+            base_url,
+            args.model,
+            it["prompt"],
+            args.temperature,
+            max_tokens,
+            timeout=timeout,
+            disable_thinking=args.disable_thinking,
+        )
         pred_label, ok = score_item(it, ans)
         preds.append(Pred(it["bench"], it["id"], ans, pred_label, int(it["gold"]), ok))
         print(f"[{i}/{len(items)}] {it['bench']} {it['id']}: {'OK' if ok else 'FAIL'} | ans={ans!r}")

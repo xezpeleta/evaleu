@@ -9,6 +9,7 @@ Examples:
   uv run evaleu.py model --id my-model --display-name "My Model" --family "Llama" --params "8B" \
     --upstream-model-id org/model --release-date-utc 2026-01-01T00:00:00Z --release-source-url https://huggingface.co/org/model
   uv run evaleu.py status
+  uv run evaleu.py server --dir site --host 127.0.0.1 --port 8000
   uv run evaleu.py clean --apply
 
 Backwards compatibility:
@@ -83,6 +84,7 @@ def add_common_eval_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--python", default=default_python(), help="Python interpreter for underlying scripts")
     p.add_argument("--no-summarize", action="store_true", help="Do not run summarize step")
     p.add_argument("--no-build", action="store_true", help="Do not run site build step")
+    p.add_argument("--disable-thinking", action="store_true", help="Forward --disable-thinking to runner (chat_template_kwargs.enable_thinking=false)")
 
     p.add_argument("--limit-eustrivia", type=int, default=80)
     p.add_argument("--limit-xnli", type=int, default=80)
@@ -144,6 +146,9 @@ def run_one_model_eval(args: argparse.Namespace, model_id: str) -> None:
 
         if model_id == "qwen3.5-27b":
             cmd += ["--max-tokens", "4096", "--timeout", "300"]
+
+        if args.disable_thinking:
+            cmd.append("--disable-thinking")
 
         run_cmd(cmd)
 
@@ -216,13 +221,39 @@ def cmd_build(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_server(args: argparse.Namespace) -> int:
+    serve_dir = Path(args.dir)
+    if not serve_dir.is_absolute():
+        serve_dir = (ROOT / serve_dir).resolve()
+    if not serve_dir.exists() or not serve_dir.is_dir():
+        raise SystemExit(f"Server directory does not exist: {serve_dir}")
+
+    run_cmd(
+        [
+            args.python,
+            "-m",
+            "http.server",
+            str(args.port),
+            "--bind",
+            args.host,
+        ],
+        cwd=serve_dir,
+    )
+    return 0
+
+
 def cmd_model(args: argparse.Namespace) -> int:
     cards = load_model_cards()
     if args.id in cards and not args.force:
         raise SystemExit(f"Model '{args.id}' already exists. Use --force to overwrite.")
 
+    display_name = args.display_name
+    suffix = "(no-thinking)"
+    if args.no_thinking and suffix not in display_name:
+        display_name = f"{display_name} {suffix}".strip()
+
     cards[args.id] = {
-        "display_name": args.display_name,
+        "display_name": display_name,
         "family": args.family,
         "params": args.params,
         "weights_quant": args.weights_quant,
@@ -429,6 +460,13 @@ def build_parser() -> argparse.ArgumentParser:
     p_build.add_argument("--python", default=default_python())
     p_build.set_defaults(func=cmd_build)
 
+    p_server = sub.add_parser("server", help="Serve static files (default: ./site) using Python http.server")
+    p_server.add_argument("--dir", default="site", help="Directory to serve")
+    p_server.add_argument("--host", default="127.0.0.1", help="Bind host")
+    p_server.add_argument("--port", type=int, default=8000, help="Bind port")
+    p_server.add_argument("--python", default=default_python())
+    p_server.set_defaults(func=cmd_server)
+
     p_model = sub.add_parser("model", help="Add or update a model card entry")
     p_model.add_argument("--id", required=True)
     p_model.add_argument("--display-name", required=True)
@@ -439,6 +477,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_model.add_argument("--release-source-url", required=True)
     p_model.add_argument("--weights-quant", default="F16")
     p_model.add_argument("--kv-cache", default="f16/f16")
+    p_model.add_argument("--no-thinking", action="store_true", help="Append '(no-thinking)' to display name")
     p_model.add_argument("--force", action="store_true")
     p_model.set_defaults(func=cmd_model)
 
