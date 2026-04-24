@@ -3,10 +3,10 @@
 
 Examples:
   uv run evaleu.py eval --model latxa-qwen3-vl-4b
-  uv run evaleu.py eval-all
+  uv run evaleu.py eval --all
   uv run evaleu.py summarize
   uv run evaleu.py build
-  uv run evaleu.py model-add --id my-model --display-name "My Model" --family "Llama" --params "8B" \
+  uv run evaleu.py model --id my-model --display-name "My Model" --family "Llama" --params "8B" \
     --upstream-model-id org/model --release-date-utc 2026-01-01T00:00:00Z --release-source-url https://huggingface.co/org/model
   uv run evaleu.py status
   uv run evaleu.py clean --apply
@@ -30,28 +30,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 MODEL_CARDS_PATH = ROOT / "site" / "model_cards.json"
 
-LEGACY_PATHS = [
-    "eval/run_phase1_all_models.sh",
-    "eval/run_phase1_all_models_with_b4.sh",
-    "eval/run_phase1_all_models_with_b5.sh",
-    "eval/run_phase1_all_models_with_b6.sh",
-    "eval/run_phase1_multiseed.sh",
-    "eval/run_phase1_multiseed_with_b4.sh",
-    "eval/run_phase1_multiseed_with_b5.sh",
-    "eval/run_phase1_multiseed_with_b6.sh",
-    "eval/run_weekend_all_bench_multiseed.sh",
-    "eval/run_weekend_all_bench_smoke.sh",
-    "eval/report_weekend_status.py",
-    "docs/weekend-server-runbook.md",
-    "eval/official_phase1",
-    "eval/official_phase1_with_b4",
-    "eval/official_phase1_with_b5",
-    "eval/official_phase1_multiseed",
-    "eval/official_phase1_multiseed_with_b4",
-    "eval/official_phase1_multiseed_with_b5",
-    "eval/official_multiseed_allbench_smoke",
-    "eval/official_multiseed_allbench_tmp",
-    "eval/official_multiseed_allbench_weekend",
+CLEAN_PATHS = [
+    "eval/.run_status",
+    "eval/.cache",
+    "eval/run.log",
 ]
 
 
@@ -185,36 +167,19 @@ def run_build(python: str, summary: str, site_data: str) -> None:
 
 
 def cmd_eval(args: argparse.Namespace) -> int:
-    run_one_model_eval(args, args.model)
+    if args.all and args.model:
+        raise SystemExit("Use either --model <id> or --all (not both)")
 
-    summary_p = summary_from_out_dir((ROOT / args.out_dir).resolve() if not Path(args.out_dir).is_absolute() else Path(args.out_dir), args.summary)
-    summarized = False
-    built = False
-    if not args.no_summarize:
-        summary_p = run_summarize(args.python, args.out_dir, args.summary)
-        summarized = True
-    if not args.no_build:
-        run_build(args.python, str(summary_p), args.site_data)
-        built = True
-
-    if summarized:
-        print(f"Summary refreshed: {summary_p}")
+    if args.all:
+        models = parse_csv(args.models_csv) if args.models_csv else model_ids_from_cards()
+        if not models:
+            raise SystemExit("No models provided and no model_cards entries found")
+        for model_id in models:
+            run_one_model_eval(args, model_id)
     else:
-        print(f"Summary skipped. Current path: {summary_p}")
-
-    if built:
-        print(f"Site data refreshed: {args.site_data}")
-    else:
-        print("Site build skipped.")
-    return 0
-
-
-def cmd_eval_all(args: argparse.Namespace) -> int:
-    models = parse_csv(args.models_csv) if args.models_csv else model_ids_from_cards()
-    if not models:
-        raise SystemExit("No models provided and no model_cards entries found")
-    for model_id in models:
-        run_one_model_eval(args, model_id)
+        if not args.model:
+            raise SystemExit("Provide --model <id> or use --all")
+        run_one_model_eval(args, args.model)
 
     summary_p = summary_from_out_dir((ROOT / args.out_dir).resolve() if not Path(args.out_dir).is_absolute() else Path(args.out_dir), args.summary)
     summarized = False
@@ -250,7 +215,7 @@ def cmd_build(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_model_add(args: argparse.Namespace) -> int:
+def cmd_model(args: argparse.Namespace) -> int:
     cards = load_model_cards()
     if args.id in cards and not args.force:
         raise SystemExit(f"Model '{args.id}' already exists. Use --force to overwrite.")
@@ -304,7 +269,7 @@ def cmd_status(args: argparse.Namespace) -> int:
 def cmd_clean(args: argparse.Namespace) -> int:
     root = ROOT
     removed: list[str] = []
-    for rel in LEGACY_PATHS:
+    for rel in CLEAN_PATHS:
         p = root / rel
         if not p.exists():
             continue
@@ -327,15 +292,12 @@ def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description="Unified CLI for eval, summarize, build, model registry, and cleanup")
     sub = ap.add_subparsers(dest="cmd")
 
-    p_eval = sub.add_parser("eval", help="Evaluate one model, then summarize and build by default")
-    p_eval.add_argument("--model", required=True)
+    p_eval = sub.add_parser("eval", help="Evaluate one model (--model) or all models (--all), then summarize/build by default")
+    p_eval.add_argument("--model", required=False)
+    p_eval.add_argument("--all", action="store_true", help="Evaluate all models from model_cards (or --models-csv)")
+    p_eval.add_argument("--models-csv", default=None, help="Comma-separated model IDs when using --all")
     add_common_eval_args(p_eval)
     p_eval.set_defaults(func=cmd_eval)
-
-    p_eval_all = sub.add_parser("eval-all", help="Evaluate all models from model_cards (or --models-csv)")
-    p_eval_all.add_argument("--models-csv", default=None, help="Comma-separated model IDs (default: all in model_cards)")
-    add_common_eval_args(p_eval_all)
-    p_eval_all.set_defaults(func=cmd_eval_all)
 
     p_sum = sub.add_parser("summarize", help="Generate eval/summary.json from per-seed eval/*.json")
     p_sum.add_argument("--out-dir", default="eval")
@@ -349,7 +311,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_build.add_argument("--python", default=default_python())
     p_build.set_defaults(func=cmd_build)
 
-    p_model = sub.add_parser("model-add", help="Add or update a model card entry")
+    p_model = sub.add_parser("model", help="Add or update a model card entry")
     p_model.add_argument("--id", required=True)
     p_model.add_argument("--display-name", required=True)
     p_model.add_argument("--family", required=True)
@@ -360,7 +322,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_model.add_argument("--weights-quant", default="F16")
     p_model.add_argument("--kv-cache", default="f16/f16")
     p_model.add_argument("--force", action="store_true")
-    p_model.set_defaults(func=cmd_model_add)
+    p_model.set_defaults(func=cmd_model)
 
     p_status = sub.add_parser("status", help="Show progress based on eval/<model>_seed<seed>.json files")
     p_status.add_argument("--out-dir", default="eval")
@@ -368,7 +330,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_status.add_argument("--seeds", default="42,123,777")
     p_status.set_defaults(func=cmd_status)
 
-    p_clean = sub.add_parser("clean", help="Remove legacy scripts and legacy eval folders")
+    p_clean = sub.add_parser("clean", help="Remove local transient eval runtime artifacts")
     p_clean.add_argument("--apply", action="store_true", help="Actually delete files; default is dry-run")
     p_clean.set_defaults(func=cmd_clean)
 

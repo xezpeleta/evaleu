@@ -25,7 +25,7 @@ uv run evaleu.py --model latxa-qwen3-vl-4b
 
 ### Evaluate all models in `site/model_cards.json`
 ```bash
-uv run evaleu.py eval-all
+uv run evaleu.py eval --all
 ```
 
 ### Summarize existing eval JSONs
@@ -40,7 +40,7 @@ uv run evaleu.py build
 
 ### Add or update a model
 ```bash
-uv run evaleu.py model-add \
+uv run evaleu.py model \
   --id my-model \
   --display-name "My Model" \
   --family "Llama" \

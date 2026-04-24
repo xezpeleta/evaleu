@@ -10,7 +10,7 @@ python3 -m json.tool site/model_cards.json >/dev/null
 
 ## 2) Add model metadata (if new model)
 ```bash
-uv run evaleu.py model-add \
+uv run evaleu.py model \
   --id <model-id> \
   --display-name "<Display Name>" \
   --family "<Family>" \
