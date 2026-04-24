@@ -15,3 +15,9 @@ eval/official_phase1_with_b5/
 eval/official_phase1_multiseed_with_b5/
 eval/official_phase1_multiseed/
 eval/official_phase1_multiseed_with_b4/
+eval/official_multiseed_allbench_*/
+eval/.run_status/
+eval/.cache/
+
+# Editor artifacts
+*.swp

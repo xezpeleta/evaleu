@@ -94,11 +94,51 @@
     }
 
     .section h2 {
-      margin: 0 0 10px;
+      margin: 0;
       font-size: 18px;
       font-weight: 600;
       letter-spacing: -0.22px;
       color: #f2f4f7;
+    }
+
+    .section > h2 { margin: 0 0 10px; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0 0 10px;
+      flex-wrap: wrap;
+    }
+
+    .family-head {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .family-toggle {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: #d8deea;
+      border-radius: 6px;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 11px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .family-toggle.open {
+      background: rgba(124,140,255,0.18);
+      border-color: rgba(124,140,255,0.58);
+      color: #eef1ff;
     }
 
     .table-wrap {
@@ -216,7 +256,9 @@
     </section>
 
     <section class="section">
-      <h2>Table 1. Main comparative results</h2>
+      <div class="section-head">
+        <h2>Table 1. Main comparative results</h2>
+      </div>
       <div class="table-wrap">
         <table>
           <thead>
@@ -225,6 +267,7 @@
               <th>Model</th>
               <th>Quantization</th>
               <th>Overall</th>
+              <th>Evals (grouped)</th>
               <th>N</th>
             </tr>
           </thead>
@@ -258,6 +301,7 @@
         <table class="protocol-table">
           <thead>
             <tr>
+              <th>Family</th>
               <th>Benchmark</th>
               <th>What is measured</th>
               <th>Metric</th>
@@ -283,7 +327,16 @@
       'BasqueGLUE_qnli': 'BasqueGLUE-QNLI',
       'BasqueGLUE_bec': 'BasqueGLUE-BEC',
       'BasqueGLUE_wic': 'BasqueGLUE-WiC',
-      'BasqueGLUE_intent': 'BasqueGLUE-Intent'
+      'BasqueGLUE_intent': 'BasqueGLUE-Intent',
+      'LatxaEval_eusexams': 'LatxaEval-EusExams',
+      'LatxaEval_eusproficiency': 'LatxaEval-EusProficiency',
+      'LatxaEval_eusreading': 'LatxaEval-EusReading'
+    }[id] || id);
+
+    const familyLabel = (id) => ({
+      'Core': 'Core',
+      'BasqueGLUE': 'BasqueGLUE',
+      'LatxaEvalSuite': 'LatxaEvalSuite'
     }[id] || id);
 
     const benchHeaderHTML = (id) => {
@@ -294,6 +347,16 @@
       }
       return esc(label);
     };
+
+    const familyHeaderHTML = (id) => {
+      const label = familyLabel(id);
+      const idx = label.indexOf('-');
+      if (idx > 0) {
+        return `${esc(label.slice(0, idx))}<br>${esc(label.slice(idx + 1))}`;
+      }
+      return esc(label);
+    };
+
     const compactModelLabel = (name) => {
       const v = String(name || '');
       if (v.includes('Qwen 3.5 27B')) return 'Qwen 3.5 27B';
@@ -319,18 +382,8 @@
       const generatedDate = formatUtcDate(generatedUtc);
       const benchDefs = (data.evaluation_protocol?.benchmarks || []);
       const benchIds = benchDefs.map(x => x.id);
-
-      const head = document.getElementById('resultsHeadRow');
-      head.innerHTML = `
-        <th>#</th>
-        <th>Model</th>
-        <th>Quantization</th>
-        <th>Overall</th>
-        ${benchIds.map(id => `<th>${benchHeaderHTML(id)}</th>`).join('')}
-        <th>N</th>
-      `;
-      document.getElementById('resultsCaption').textContent =
-        `Accuracy reported as mean ± std across random seeds, with 80 items per benchmark (${perModelN} total items per model).`;
+      const familyDefs = (data.evaluation_protocol?.benchmark_families || []);
+      const familyIds = familyDefs.map(x => x.id);
 
       document.getElementById('metaInline').innerHTML = `
         <span>Generated: <span class="mono">${esc(generatedDate)}</span></span>
@@ -344,45 +397,108 @@
         <div class="meta-card"><div class="meta-k">Best model</div><div class="meta-v">${esc(best)}</div></div>
       `;
 
+      const head = document.getElementById('resultsHeadRow');
+      const body = document.getElementById('resultsBody');
+      const caption = document.getElementById('resultsCaption');
+
+      const expandedFamilies = new Set();
+      const familyBenchMap = Object.fromEntries(
+        familyDefs.map(fd => [fd.id, (fd.benchmarks || []).map(b => b.id)])
+      );
+
       const bestOverall = Math.max(...rows.map(r => r.overall_accuracy || 0));
+      const bestByFamily = Object.fromEntries(
+        familyIds.map(id => [id, Math.max(...rows.map(r => ((r.by_family || {})[id] || {}).accuracy || 0))])
+      );
       const bestByBench = Object.fromEntries(
         benchIds.map(id => [id, Math.max(...rows.map(r => ((r.by_benchmark || {})[id] || {}).accuracy || 0))])
       );
       const isBest = (v, best) => Math.abs((v || 0) - (best || 0)) < 1e-12;
 
-      const body = document.getElementById('resultsBody');
-      rows.forEach((r, i) => {
-        const b = r.by_benchmark || {};
-        const quantLabels = [];
-        if (r.weights_quant) quantLabels.push(String(r.weights_quant).toUpperCase());
-        const benchCells = benchIds.map(id => {
-          const m = b[id] || {};
-          const v = m.accuracy || 0;
-          const std = m.accuracy_std || 0;
-          const cell = metricCell(v, std);
-          return `<td>${isBest(v, bestByBench[id]) ? `<span class="strong">${cell}</span>` : cell}</td>`;
-        }).join('');
-        body.innerHTML += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>
-              <div class="model-main">${esc(r.display_name)}</div>
-              <div class="model-sub mono">${esc(r.model_id)}</div>
-            </td>
-            <td>
-              ${quantLabels.map(q => `<span class="pill">${esc(q)}</span>`).join('')}
-            </td>
-            <td>${isBest(r.overall_accuracy, bestOverall) ? `<span class="strong">${metricCell(r.overall_accuracy, r.overall_accuracy_std)}</span>` : metricCell(r.overall_accuracy, r.overall_accuracy_std)}</td>
-            ${benchCells}
-            <td>${esc(r.n_items)}</td>
-          </tr>
+      const renderResultsTable = () => {
+        const expandedBenchIds = familyDefs.flatMap(fd => (
+          expandedFamilies.has(fd.id) ? (familyBenchMap[fd.id] || []) : []
+        ));
+
+        head.innerHTML = `
+          <th>#</th>
+          <th>Model</th>
+          <th>Quantization</th>
+          <th>Overall</th>
+          ${familyDefs.map(fd => {
+            const open = expandedFamilies.has(fd.id);
+            const hasDetails = (familyBenchMap[fd.id] || []).length > 0;
+            const icon = open ? '▾' : '▸';
+            const toggleTitle = `${open ? 'Hide' : 'Show'} ${familyLabel(fd.id)} details`;
+            const familyTh = `<th><span class="family-head">${familyHeaderHTML(fd.id)}${hasDetails ? `<button class="family-toggle ${open ? 'open' : ''}" data-toggle-family="${esc(fd.id)}" type="button" title="${esc(toggleTitle)}" aria-label="${esc(toggleTitle)}">${icon}</button>` : ''}</span></th>`;
+            const detailThs = open ? (familyBenchMap[fd.id] || []).map(bid => `<th>${benchHeaderHTML(bid)}</th>`).join('') : '';
+            return familyTh + detailThs;
+          }).join('')}
+          <th>N</th>
         `;
-      });
+
+        head.querySelectorAll('button[data-toggle-family]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const fam = btn.getAttribute('data-toggle-family');
+            if (expandedFamilies.has(fam)) expandedFamilies.delete(fam);
+            else expandedFamilies.add(fam);
+            renderResultsTable();
+          });
+        });
+
+        body.innerHTML = rows.map((r, i) => {
+          const quantLabels = [];
+          if (r.weights_quant) quantLabels.push(String(r.weights_quant).toUpperCase());
+          const byFam = r.by_family || {};
+          const byBench = r.by_benchmark || {};
+
+          const familyAndBenchCells = familyDefs.map(fd => {
+            const fam = byFam[fd.id] || {};
+            const famCell = isBest(fam.accuracy, bestByFamily[fd.id])
+              ? `<td><span class="strong">${metricCell(fam.accuracy || 0, fam.accuracy_std || 0)}</span></td>`
+              : `<td>${metricCell(fam.accuracy || 0, fam.accuracy_std || 0)}</td>`;
+
+            if (!expandedFamilies.has(fd.id)) return famCell;
+
+            const benchCells = (familyBenchMap[fd.id] || []).map(bid => {
+              const bm = byBench[bid] || {};
+              const inner = metricCell(bm.accuracy || 0, bm.accuracy_std || 0);
+              return isBest(bm.accuracy, bestByBench[bid])
+                ? `<td><span class="strong">${inner}</span></td>`
+                : `<td>${inner}</td>`;
+            }).join('');
+
+            return famCell + benchCells;
+          }).join('');
+
+          return `
+            <tr>
+              <td>${i + 1}</td>
+              <td>
+                <div class="model-main">${esc(r.display_name)}</div>
+                <div class="model-sub mono">${esc(r.model_id)}</div>
+              </td>
+              <td>${quantLabels.map(q => `<span class="pill">${esc(q)}</span>`).join('')}</td>
+              <td>${isBest(r.overall_accuracy, bestOverall) ? `<span class="strong">${metricCell(r.overall_accuracy, r.overall_accuracy_std)}</span>` : metricCell(r.overall_accuracy, r.overall_accuracy_std)}</td>
+              ${familyAndBenchCells}
+              <td>${esc(r.n_items)}</td>
+            </tr>
+          `;
+        }).join('');
+
+        const totalDetailCols = expandedBenchIds.length;
+        caption.textContent = totalDetailCols
+          ? `Grouped evals shown by family; ${totalDetailCols} benchmark detail columns expanded (mean ± std on hover).`
+          : `Grouped evals shown by family; benchmark detail columns are collapsed by default (mean ± std on hover).`;
+      };
+
+      renderResultsTable();
 
       const protocolBody = document.getElementById('protocolBody');
       (data.evaluation_protocol?.benchmarks || []).forEach(x => {
         protocolBody.innerHTML += `
           <tr>
+            <td class="mono">${esc(x.family || '-')}</td>
             <td class="mono">${esc(benchLabel(x.id))}</td>
             <td>${esc(x.task)}</td>
             <td>${esc(x.metric)}</td>
@@ -444,12 +560,12 @@
         }
       });
 
-      const benchLabels = benchIds.map(id => benchLabel(id));
+      const radarLabels = familyIds.map(id => familyLabel(id));
       const radarDatasets = rows.map((r, idx) => {
-        const b = r.by_benchmark || {};
+        const f = r.by_family || {};
         return {
           label: r.display_name,
-          data: benchIds.map(id => Math.round(((((b[id] || {}).accuracy) || 0) * 1000)) / 10),
+          data: familyIds.map(id => Math.round(((((f[id] || {}).accuracy) || 0) * 1000)) / 10),
           borderColor: colors[idx % colors.length],
           backgroundColor: 'transparent',
           borderWidth: 2,
@@ -460,7 +576,7 @@
 
       window.__radarChart = new Chart(document.getElementById('radarBench').getContext('2d'), {
         type: 'radar',
-        data: { labels: benchLabels, datasets: radarDatasets },
+        data: { labels: radarLabels, datasets: radarDatasets },
         options: {
           responsive: true,
           maintainAspectRatio: false,

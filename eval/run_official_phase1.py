@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Dict, Any, List, Tuple
 
 import requests
-from datasets import load_dataset
+from datasets import load_dataset, get_dataset_config_names
 
 
 def _load_dotenv(repo_root: Path) -> None:
@@ -122,12 +122,33 @@ def _normalize(s: str) -> str:
 
 def _extract_choice_letter(text: str) -> str | None:
     t = _normalize(text)
-    m = re.search(r"\b([abcd])\b", t)
+    m = re.search(r"\b([a-z])\b", t)
     if m:
         return m.group(1).upper()
-    m = re.search(r"\b([1-4])\b", t)
+    m = re.search(r"\b(\d{1,2})\b", t)
     if m:
-        return chr(ord('A') + int(m.group(1)) - 1)
+        idx = int(m.group(1))
+        if idx >= 1:
+            return chr(ord('A') + idx - 1)
+    return None
+
+
+def _extract_choice_index(answer: str, n_choices: int) -> int | None:
+    if n_choices <= 0:
+        return None
+    letter = _extract_choice_letter(answer)
+    if letter:
+        idx = ord(letter) - ord("A")
+        if 0 <= idx < n_choices:
+            return idx
+
+    t = _normalize(answer)
+    if t.isdigit():
+        idx = int(t)
+        if 0 <= idx < n_choices:
+            return idx
+        if 1 <= idx <= n_choices:
+            return idx - 1
     return None
 
 
@@ -357,6 +378,139 @@ def build_benchmark6_template_items(limit: int, seed: int) -> List[Dict[str, Any
     return items
 
 
+def _latxa_mc_prompt(question: str, candidates: List[str], context: str | None = None) -> str:
+    letters = [chr(ord("A") + i) for i in range(len(candidates))]
+    opts = "\n".join(f"{letters[i]}) {candidates[i]}" for i in range(len(candidates)))
+    ctx = f"Testuingurua: {context}\n" if context else ""
+    return (
+        "Aukeratu aukera zuzena (A/B/C/D... edo 1/2/3/4... bakarrik).\n"
+        f"{ctx}"
+        f"Galdera: {question}\n{opts}\n"
+        "Erantzuna:"
+    )
+
+
+def _eusexams_bank_path() -> Path:
+    return Path(__file__).resolve().parents[1] / "eval" / ".cache" / "eusexams_eu_bank.json"
+
+
+def _sanitize_latxa_mc_row(row: Dict[str, Any]) -> Dict[str, Any] | None:
+    cands = row.get("candidates", []) or []
+    if not cands:
+        return None
+    ans = row.get("answer")
+    if ans is None:
+        return None
+    try:
+        ans_i = int(ans)
+    except Exception:
+        return None
+    if not (0 <= ans_i < len(cands)):
+        return None
+    out = dict(row)
+    out["candidates"] = cands
+    out["answer"] = ans_i
+    return out
+
+
+def _load_or_build_eusexams_eu_bank() -> List[Dict[str, Any]]:
+    cache_path = _eusexams_bank_path()
+    if cache_path.exists():
+        cached = json.loads(cache_path.read_text(encoding="utf-8"))
+        return [x for x in (_sanitize_latxa_mc_row(r) for r in cached) if x is not None]
+
+    cfgs = [c for c in get_dataset_config_names("HiTZ/EusExams") if c.startswith("eu_")]
+    bank: List[Dict[str, Any]] = []
+    for cfg in cfgs:
+        ds = load_dataset("HiTZ/EusExams", cfg, split="test")
+        for row in ds:
+            clean = _sanitize_latxa_mc_row({
+                "cfg": cfg,
+                "id": str(row.get("id")),
+                "question": row.get("question", ""),
+                "candidates": row.get("candidates", []),
+                "answer": row.get("answer"),
+            })
+            if clean is not None:
+                bank.append(clean)
+
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(json.dumps(bank, ensure_ascii=False), encoding="utf-8")
+    return bank
+
+
+def build_latxa_eusexams_items(limit: int, seed: int) -> List[Dict[str, Any]]:
+    bank = _load_or_build_eusexams_eu_bank()
+    rng = random.Random(seed)
+    idxs = list(range(len(bank)))
+    rng.shuffle(idxs)
+    idxs = idxs[:limit]
+
+    items = []
+    for i in idxs:
+        row = bank[int(i)]
+        cands = row.get("candidates", [])
+        if not cands:
+            continue
+        items.append({
+            "bench": "LatxaEval_eusexams",
+            "id": f"latxa_eusexams_{row.get('cfg')}_{row.get('id')}",
+            "prompt": _latxa_mc_prompt(row.get("question", ""), cands),
+            "gold": int(row.get("answer", 0)),
+            "label_names": [chr(ord("A") + j) for j in range(len(cands))],
+            "meta": {"candidates": cands, "config": row.get("cfg")},
+        })
+    return items
+
+
+def build_latxa_eusproficiency_items(limit: int, seed: int) -> List[Dict[str, Any]]:
+    ds = load_dataset("HiTZ/EusProficiency", split="test")
+    rng = random.Random(seed)
+    idxs = list(range(len(ds)))
+    rng.shuffle(idxs)
+    idxs = idxs[:limit]
+
+    items = []
+    for i in idxs:
+        row = ds[int(i)]
+        cands = row.get("candidates", [])
+        if not cands:
+            continue
+        items.append({
+            "bench": "LatxaEval_eusproficiency",
+            "id": f"latxa_eusproficiency_{row['id']}",
+            "prompt": _latxa_mc_prompt(row["question"], cands),
+            "gold": int(row["answer"]),
+            "label_names": [chr(ord("A") + j) for j in range(len(cands))],
+            "meta": {"candidates": cands},
+        })
+    return items
+
+
+def build_latxa_eusreading_items(limit: int, seed: int) -> List[Dict[str, Any]]:
+    ds = load_dataset("HiTZ/EusReading", split="test")
+    rng = random.Random(seed)
+    idxs = list(range(len(ds)))
+    rng.shuffle(idxs)
+    idxs = idxs[:limit]
+
+    items = []
+    for i in idxs:
+        row = ds[int(i)]
+        cands = row.get("candidates", [])
+        if not cands:
+            continue
+        items.append({
+            "bench": "LatxaEval_eusreading",
+            "id": f"latxa_eusreading_{row['id']}",
+            "prompt": _latxa_mc_prompt(row["question"], cands, context=row.get("context", "")),
+            "gold": int(row["answer"]),
+            "label_names": [chr(ord("A") + j) for j in range(len(cands))],
+            "meta": {"candidates": cands},
+        })
+    return items
+
+
 def _postprocess_eustrivia_candidates(items: List[Dict[str, Any]]) -> None:
     if not items:
         return
@@ -415,6 +569,33 @@ def build_benchmark_registry(args: argparse.Namespace) -> List[Dict[str, Any]]:
             }
         )
 
+    if args.enable_latxa_eusexams or args.limit_latxa_eusexams > 0:
+        specs.append(
+            {
+                "id": "LatxaEval_eusexams",
+                "limit": args.limit_latxa_eusexams,
+                "builder": build_latxa_eusexams_items,
+            }
+        )
+
+    if args.enable_latxa_eusproficiency or args.limit_latxa_eusproficiency > 0:
+        specs.append(
+            {
+                "id": "LatxaEval_eusproficiency",
+                "limit": args.limit_latxa_eusproficiency,
+                "builder": build_latxa_eusproficiency_items,
+            }
+        )
+
+    if args.enable_latxa_eusreading or args.limit_latxa_eusreading > 0:
+        specs.append(
+            {
+                "id": "LatxaEval_eusreading",
+                "limit": args.limit_latxa_eusreading,
+                "builder": build_latxa_eusreading_items,
+            }
+        )
+
     return specs
 
 
@@ -452,12 +633,8 @@ def score_item(item: Dict[str, Any], answer: str) -> Tuple[int | None, bool]:
     label_names = item["label_names"]
     pred = None
 
-    if item["bench"] == "EusTrivia":
-        letter = _extract_choice_letter(answer)
-        if letter:
-            idx = ord(letter) - ord("A")
-            if 0 <= idx < len(label_names):
-                pred = idx
+    if item["bench"] in {"EusTrivia", "LatxaEval_eusexams", "LatxaEval_eusproficiency", "LatxaEval_eusreading"}:
+        pred = _extract_choice_index(answer, len(label_names))
         if pred is None:
             t = _normalize(answer)
             for i, cand in enumerate(item.get("meta", {}).get("candidates", []) or []):
@@ -539,6 +716,12 @@ def main():
     ap.add_argument("--limit-b5-template", type=int, default=0, help="Sample limit for Benchmark-5 template")
     ap.add_argument("--enable-b6-template", action="store_true", help="Enable Benchmark-6 onboarding template hook")
     ap.add_argument("--limit-b6-template", type=int, default=0, help="Sample limit for Benchmark-6 template")
+    ap.add_argument("--enable-latxa-eusexams", action="store_true", help="Enable LatxaEval EusExams benchmark")
+    ap.add_argument("--limit-latxa-eusexams", type=int, default=0, help="Sample limit for LatxaEval EusExams")
+    ap.add_argument("--enable-latxa-eusproficiency", action="store_true", help="Enable LatxaEval EusProficiency benchmark")
+    ap.add_argument("--limit-latxa-eusproficiency", type=int, default=0, help="Sample limit for LatxaEval EusProficiency")
+    ap.add_argument("--enable-latxa-eusreading", action="store_true", help="Enable LatxaEval EusReading benchmark")
+    ap.add_argument("--limit-latxa-eusreading", type=int, default=0, help="Sample limit for LatxaEval EusReading")
     ap.add_argument("--out", default="eval/official_phase1/results.json")
     args = ap.parse_args()
 
