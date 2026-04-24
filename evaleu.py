@@ -23,6 +23,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -235,6 +236,38 @@ def cmd_model(args: argparse.Namespace) -> int:
     return 0
 
 
+def format_status_table(rows: list[dict], total_done: int, total_expected: int) -> str:
+    headers = ["Model", "Runs", "Progress", "Status", "Missing seeds", "Last update (UTC)"]
+    rendered_rows = []
+    for row in rows:
+        rendered_rows.append([
+            row["model"],
+            f"{row['done']}/{row['expected']}",
+            f"{row['progress_percent']:.1f}%",
+            row["status"],
+            ",".join(row["missing_seeds"]) if row["missing_seeds"] else "-",
+            row["latest_result_mtime_utc"] or "-",
+        ])
+
+    widths = [len(h) for h in headers]
+    for r in rendered_rows:
+        for i, cell in enumerate(r):
+            widths[i] = max(widths[i], len(cell))
+
+    def fmt_row(cells: list[str]) -> str:
+        return " | ".join(cell.ljust(widths[i]) for i, cell in enumerate(cells))
+
+    sep = "-+-".join("-" * w for w in widths)
+    total_pct = round((100.0 * total_done / total_expected), 1) if total_expected else 0.0
+    lines = [
+        f"Overall: {total_done}/{total_expected} ({total_pct:.1f}%)",
+        fmt_row(headers),
+        sep,
+    ]
+    lines.extend(fmt_row(r) for r in rendered_rows)
+    return "\n".join(lines)
+
+
 def cmd_status(args: argparse.Namespace) -> int:
     out_dir = Path(args.out_dir)
     if not out_dir.is_absolute():
@@ -245,13 +278,55 @@ def cmd_status(args: argparse.Namespace) -> int:
     expected = len(models) * len(seeds)
 
     run_files = sorted(p for p in out_dir.glob("*_seed*.json") if p.name != "summary.json")
-    done = len(run_files)
+
+    results_by_model: dict[str, set[str]] = {}
+    latest_by_model: dict[str, datetime] = {}
+    for p in run_files:
+        stem = p.stem
+        if "_seed" not in stem:
+            continue
+        model_id, seed = stem.rsplit("_seed", 1)
+        results_by_model.setdefault(model_id, set()).add(seed)
+
+        mtime = datetime.fromtimestamp(p.stat().st_mtime, tz=timezone.utc)
+        prev = latest_by_model.get(model_id)
+        if prev is None or mtime > prev:
+            latest_by_model[model_id] = mtime
+
+    model_rows: list[dict] = []
+    done = 0
+    for model_id in models:
+        seeds_done = results_by_model.get(model_id, set())
+        done_for_model = sum(1 for s in seeds if s in seeds_done)
+        done += done_for_model
+        missing = [s for s in seeds if s not in seeds_done]
+        if done_for_model == len(seeds) and len(seeds) > 0:
+            status = "complete"
+        elif done_for_model > 0:
+            status = "partial"
+        else:
+            status = "pending"
+
+        latest = latest_by_model.get(model_id)
+        model_rows.append({
+            "model": model_id,
+            "done": done_for_model,
+            "expected": len(seeds),
+            "progress_percent": round((100.0 * done_for_model / len(seeds)), 1) if seeds else 0.0,
+            "status": status,
+            "missing_seeds": missing,
+            "latest_result_mtime_utc": latest.isoformat() if latest else None,
+        })
+
     pct = round((100.0 * done / expected), 1) if expected else 0.0
 
     latest_mtime = None
     if run_files:
         latest = max(run_files, key=lambda p: p.stat().st_mtime)
         latest_mtime = datetime.fromtimestamp(latest.stat().st_mtime, tz=timezone.utc).isoformat()
+
+    expected_set = set(models)
+    unexpected_models = sorted(m for m in results_by_model.keys() if m not in expected_set)
 
     payload = {
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
@@ -261,7 +336,12 @@ def cmd_status(args: argparse.Namespace) -> int:
         "progress_percent": pct,
         "summary_exists": (out_dir / "summary.json").exists(),
         "latest_result_mtime_utc": latest_mtime,
+        "models": model_rows,
+        "unexpected_models_with_results": unexpected_models,
     }
+
+    table = format_status_table(model_rows, done, expected)
+    print(table, file=sys.stderr)
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0
 
@@ -324,7 +404,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_model.add_argument("--force", action="store_true")
     p_model.set_defaults(func=cmd_model)
 
-    p_status = sub.add_parser("status", help="Show progress based on eval/<model>_seed<seed>.json files")
+    p_status = sub.add_parser("status", help="Show overall JSON status plus per-model progress table from eval/<model>_seed<seed>.json files")
     p_status.add_argument("--out-dir", default="eval")
     p_status.add_argument("--models-csv", default=None, help="Comma-separated expected models (default: model_cards)")
     p_status.add_argument("--seeds", default="42,123,777")
