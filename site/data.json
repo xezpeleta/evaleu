@@ -1,7 +1,7 @@
 {
   "title": "Basque LLM Evaluation",
   "subtitle": "Comparative evaluation on EusTrivia, XNLIeu, BasqueGLUE-QNLI, BasqueGLUE-BEC, BasqueGLUE-WiC, BasqueGLUE-Intent, LatxaEval-EusExams, LatxaEval-EusProficiency, LatxaEval-EusReading (multi-seed robust view)",
-  "generated_at_utc": "2026-04-24T08:22:26.598937+00:00",
+  "generated_at_utc": "2026-04-24T10:03:58.488264+00:00",
   "endpoint": "${LLAMA_SWAP_BASE_URL}",
   "evaluation_protocol": {
     "suite": "Official benchmark subset (multi-seed)",
@@ -255,7 +255,7 @@
           ]
         }
       },
-      "source_file": "eval/official_multiseed_allbench_weekend/summary.json"
+      "source_file": "eval/summary.json"
     },
     {
       "model_id": "latxa-qwen3-vl-32b",
@@ -370,7 +370,7 @@
           ]
         }
       },
-      "source_file": "eval/official_multiseed_allbench_weekend/summary.json"
+      "source_file": "eval/summary.json"
     },
     {
       "model_id": "qwen3.5-27b",
@@ -485,7 +485,7 @@
           ]
         }
       },
-      "source_file": "eval/official_multiseed_allbench_weekend/summary.json"
+      "source_file": "eval/summary.json"
     },
     {
       "model_id": "kimu-9b",
@@ -600,7 +600,7 @@
           ]
         }
       },
-      "source_file": "eval/official_multiseed_allbench_weekend/summary.json"
+      "source_file": "eval/summary.json"
     },
     {
       "model_id": "latxa-qwen3-vl-8b",
@@ -715,7 +715,7 @@
           ]
         }
       },
-      "source_file": "eval/official_multiseed_allbench_weekend/summary.json"
+      "source_file": "eval/summary.json"
     },
     {
       "model_id": "latxa-8b",
@@ -830,7 +830,7 @@
           ]
         }
       },
-      "source_file": "eval/official_multiseed_allbench_weekend/summary.json"
+      "source_file": "eval/summary.json"
     },
     {
       "model_id": "kimu-2b",
@@ -945,7 +945,120 @@
           ]
         }
       },
-      "source_file": "eval/official_multiseed_allbench_weekend/summary.json"
+      "source_file": "eval/summary.json"
+    },
+    {
+      "model_id": "latxa-qwen3-vl-4b",
+      "display_name": "Latxa Qwen3 VL 4B",
+      "family": "Qwen3-VL (Latxa)",
+      "params": "4B",
+      "weights_quant": "F16",
+      "kv_cache": "f16/f16",
+      "upstream_model_id": "HiTZ/Latxa-Qwen3-VL-4B-Instruct",
+      "release_date_utc": "2025-12-12T11:42:03Z",
+      "release_source_url": "https://huggingface.co/HiTZ/Latxa-Qwen3-VL-4B-Instruct",
+      "overall_accuracy": 0.2222222222222222,
+      "overall_accuracy_std": 0.0,
+      "n_items": 720,
+      "n_seeds": 1,
+      "seed_ids": [
+        42
+      ],
+      "by_benchmark": {
+        "EusTrivia": {
+          "n": 80,
+          "accuracy": 0.0,
+          "accuracy_std": 0.0,
+          "coverage": 1.0,
+          "family": "Core"
+        },
+        "XNLIeu": {
+          "n": 80,
+          "accuracy": 1.0,
+          "accuracy_std": 0.0,
+          "coverage": 1.0,
+          "family": "Core"
+        },
+        "BasqueGLUE_qnli": {
+          "n": 80,
+          "accuracy": 0.0,
+          "accuracy_std": 0.0,
+          "coverage": 1.0,
+          "family": "BasqueGLUE"
+        },
+        "BasqueGLUE_bec": {
+          "n": 80,
+          "accuracy": 0.0,
+          "accuracy_std": 0.0,
+          "coverage": 1.0,
+          "family": "BasqueGLUE"
+        },
+        "BasqueGLUE_wic": {
+          "n": 80,
+          "accuracy": 0.0,
+          "accuracy_std": 0.0,
+          "coverage": 1.0,
+          "family": "BasqueGLUE"
+        },
+        "BasqueGLUE_intent": {
+          "n": 80,
+          "accuracy": 1.0,
+          "accuracy_std": 0.0,
+          "coverage": 1.0,
+          "family": "BasqueGLUE"
+        },
+        "LatxaEval_eusexams": {
+          "n": 80,
+          "accuracy": 0.0,
+          "accuracy_std": 0.0,
+          "coverage": 1.0,
+          "family": "LatxaEvalSuite"
+        },
+        "LatxaEval_eusproficiency": {
+          "n": 80,
+          "accuracy": 0.0,
+          "accuracy_std": 0.0,
+          "coverage": 1.0,
+          "family": "LatxaEvalSuite"
+        },
+        "LatxaEval_eusreading": {
+          "n": 80,
+          "accuracy": 0.0,
+          "accuracy_std": 0.0,
+          "coverage": 1.0,
+          "family": "LatxaEvalSuite"
+        }
+      },
+      "by_family": {
+        "Core": {
+          "accuracy": 0.5,
+          "accuracy_std": 0.0,
+          "benchmarks": [
+            "EusTrivia",
+            "XNLIeu"
+          ]
+        },
+        "BasqueGLUE": {
+          "accuracy": 0.25,
+          "accuracy_std": 0.0,
+          "benchmarks": [
+            "BasqueGLUE_qnli",
+            "BasqueGLUE_bec",
+            "BasqueGLUE_wic",
+            "BasqueGLUE_intent"
+          ]
+        },
+        "LatxaEvalSuite": {
+          "accuracy": 0.0,
+          "accuracy_std": 0.0,
+          "benchmarks": [
+            "LatxaEval_eusexams",
+            "LatxaEval_eusproficiency",
+            "LatxaEval_eusreading"
+          ]
+        }
+      },
+      "source_file": "eval/summary.json"
     }
   ]
 }

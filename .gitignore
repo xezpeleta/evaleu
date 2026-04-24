@@ -10,14 +10,11 @@ __pycache__/
 # Local eval outputs
 eval/multi/
 eval/results_*.json
-eval/official_phase1/
-eval/official_phase1_with_b5/
-eval/official_phase1_multiseed_with_b5/
-eval/official_phase1_multiseed/
-eval/official_phase1_multiseed_with_b4/
-eval/official_multiseed_allbench_*/
 eval/.run_status/
 eval/.cache/
+eval/*_seed*.json
+eval/run.log
+!eval/summary.json
 
 # Editor artifacts
 *.swp

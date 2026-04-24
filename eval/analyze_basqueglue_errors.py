@@ -110,8 +110,8 @@ def pretty_print(model: str, rep: Dict[str, Any], label_names: List[str]) -> Non
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Analyze BasqueGLUE_qnli errors from official phase1 result JSON files")
-    ap.add_argument("--results-dir", default="eval/official_phase1", help="Directory with per-model JSON results")
-    ap.add_argument("--out", default="eval/official_phase1/basqueglue_error_report.json", help="Output JSON report path")
+    ap.add_argument("--results-dir", default="eval", help="Directory with per-model JSON results")
+    ap.add_argument("--out", default="eval/basqueglue_error_report.json", help="Output JSON report path")
     args = ap.parse_args()
 
     results_dir = Path(args.results_dir)

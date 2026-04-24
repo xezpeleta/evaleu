@@ -28,7 +28,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SUMMARY_PATH="eval/official_multiseed_allbench_weekend/summary.json"
+          SUMMARY_PATH="eval/summary.json"
           if [[ -f "$SUMMARY_PATH" ]]; then
             python3 site/build_site_data.py
             echo "Rebuilt site/data.json from $SUMMARY_PATH"

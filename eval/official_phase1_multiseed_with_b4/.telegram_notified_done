@@ -1,6 +1,0 @@
-timestamp=2026-04-23T06:32:22Z
-top_model=latxa-70b
-overall_mean=0.703125
-overall_std=0.020491995388443762
-n=3
-message=✅ B4 multi-seed eval finished. Top model: latxa-70b with 70.31% ± 2.05 (overall, seeds n=3).

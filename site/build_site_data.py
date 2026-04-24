@@ -100,10 +100,10 @@ def family_from_benchmark_defs(benchmark_defs):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Build site/data.json from multiseed summary")
+    ap = argparse.ArgumentParser(description="Build site/data.json from eval summary")
     ap.add_argument(
         "--summary",
-        default="eval/official_multiseed_allbench_weekend/summary.json",
+        default="eval/summary.json",
         help="Path (relative to repo root or absolute) to summary.json",
     )
     ap.add_argument(

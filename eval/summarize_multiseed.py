@@ -24,9 +24,9 @@ def parse_seed(name: str):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Summarize multi-seed official phase1 results")
-    ap.add_argument("--input-dir", default="eval/official_phase1_multiseed")
-    ap.add_argument("--out", default="eval/official_phase1_multiseed/summary.json")
+    ap = argparse.ArgumentParser(description="Summarize multi-seed eval results")
+    ap.add_argument("--input-dir", default="eval")
+    ap.add_argument("--out", default="eval/summary.json")
     args = ap.parse_args()
 
     in_dir = Path(args.input_dir)

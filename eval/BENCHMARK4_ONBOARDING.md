@@ -1,7 +1,7 @@
-# Benchmark-4 Onboarding Template (Official Runner)
+# Benchmark-4 Onboarding Template (Unified Runner)
 
 This project now includes a benchmark-registry hook in:
-- `eval/run_official_phase1.py`
+- `eval/run_eval.py`
 
 ## Current Benchmark-4 implementation
 
@@ -18,14 +18,14 @@ When enabled, output JSON `limits` includes `BasqueGLUE_bec`.
 ## How to run with BEC (smoke)
 
 ```bash
-python3 eval/run_official_phase1.py \
+python3 eval/run_eval.py \
   --model kimu-9b \
   --limit-eustrivia 20 \
   --limit-xnli 20 \
   --limit-bglue-qnli 20 \
   --enable-b4-template \
   --limit-b4-template 20 \
-  --out eval/official_phase1/with_bec_smoke.json
+  --out eval/with_bec_smoke.json
 ```
 
 ## How to swap Benchmark-4 later

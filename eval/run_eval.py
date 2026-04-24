@@ -722,7 +722,7 @@ def main():
     ap.add_argument("--limit-latxa-eusproficiency", type=int, default=0, help="Sample limit for LatxaEval EusProficiency")
     ap.add_argument("--enable-latxa-eusreading", action="store_true", help="Enable LatxaEval EusReading benchmark")
     ap.add_argument("--limit-latxa-eusreading", type=int, default=0, help="Sample limit for LatxaEval EusReading")
-    ap.add_argument("--out", default="eval/official_phase1/results.json")
+    ap.add_argument("--out", default="eval/results.json")
     args = ap.parse_args()
 
     base_url = _resolve_base_url(args.base_url)
@@ -742,7 +742,7 @@ def main():
     out = {
         "base_url": "${LLAMA_SWAP_BASE_URL}",
         "model": args.model,
-        "suite": "official_phase1",
+        "suite": "evaleu",
         "max_tokens": max_tokens,
         "timeout": timeout,
         "limits": limits,
