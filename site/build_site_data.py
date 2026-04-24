@@ -103,7 +103,7 @@ def main():
     ap = argparse.ArgumentParser(description="Build site/data.json from multiseed summary")
     ap.add_argument(
         "--summary",
-        default="eval/official_phase1_multiseed_with_b5/summary.json",
+        default="eval/official_multiseed_allbench_weekend/summary.json",
         help="Path (relative to repo root or absolute) to summary.json",
     )
     ap.add_argument(

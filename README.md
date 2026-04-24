@@ -69,20 +69,34 @@ For `qwen3.5-27b`, evaluation uses no-thinking mode with higher token/timeout se
 ./eval/run_weekend_all_bench_smoke.sh
 ```
 
-### 2) Full weekend run
+### 2) Add/update one model only (recommended day-to-day)
+
+```bash
+uv run evaleu.py --model latxa-qwen3-vl-8b
+```
+
+What this does in one command:
+- runs all 9 benchmarks for seeds `42,123,777` for that model,
+- updates `eval/official_multiseed_allbench_weekend/summary.json`,
+- rebuilds `site/data.json`.
+
+### 3) Full weekend run (all models)
 
 ```bash
 ./eval/run_weekend_all_bench_multiseed.sh
 ```
 
-### 3) Build/serve site
+### 4) Serve site locally
 
 ```bash
-python3 site/build_site_data.py
 python3 -m http.server 8787
 ```
 
 Open: `http://127.0.0.1:8787/site/`
+
+### 5) Publish
+
+Commit + push to `main`. GitHub Actions auto-deploys `site/` to `gh-pages` on every push.
 
 ---
 

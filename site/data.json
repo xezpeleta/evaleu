@@ -1,7 +1,7 @@
 {
   "title": "Basque LLM Evaluation",
   "subtitle": "Comparative evaluation on EusTrivia, XNLIeu, BasqueGLUE-QNLI, BasqueGLUE-BEC, BasqueGLUE-WiC, BasqueGLUE-Intent, LatxaEval-EusExams, LatxaEval-EusProficiency, LatxaEval-EusReading (multi-seed robust view)",
-  "generated_at_utc": "2026-04-23T23:45:14.828942+00:00",
+  "generated_at_utc": "2026-04-24T07:22:19.778376+00:00",
   "endpoint": "${LLAMA_SWAP_BASE_URL}",
   "evaluation_protocol": {
     "suite": "Official benchmark subset (multi-seed)",
@@ -478,6 +478,121 @@
         "LatxaEvalSuite": {
           "accuracy": 0.5972222222222222,
           "accuracy_std": 0.035806460765626595,
+          "benchmarks": [
+            "LatxaEval_eusexams",
+            "LatxaEval_eusproficiency",
+            "LatxaEval_eusreading"
+          ]
+        }
+      },
+      "source_file": "eval/official_multiseed_allbench_weekend/summary.json"
+    },
+    {
+      "model_id": "latxa-qwen3-vl-8b",
+      "display_name": "Latxa Qwen3 VL 8B",
+      "family": "Qwen3-VL (Latxa)",
+      "params": "8B",
+      "weights_quant": "F16",
+      "kv_cache": "f16/f16",
+      "upstream_model_id": "HiTZ/Latxa-Qwen3-VL-8B-Instruct",
+      "release_date_utc": "2026-02-19T08:51:04Z",
+      "release_source_url": "https://huggingface.co/HiTZ/Latxa-Qwen3-VL-8B-Instruct",
+      "overall_accuracy": 0.5921296296296297,
+      "overall_accuracy_std": 0.004009376869372387,
+      "n_items": 720,
+      "n_seeds": 3,
+      "seed_ids": [
+        42,
+        123,
+        777
+      ],
+      "by_benchmark": {
+        "EusTrivia": {
+          "n": 80,
+          "accuracy": 0.6166666666666667,
+          "accuracy_std": 0.040181878170803965,
+          "coverage": 1.0,
+          "family": "Core"
+        },
+        "XNLIeu": {
+          "n": 80,
+          "accuracy": 0.7583333333333333,
+          "accuracy_std": 0.026020824993326627,
+          "coverage": 1.0,
+          "family": "Core"
+        },
+        "BasqueGLUE_qnli": {
+          "n": 80,
+          "accuracy": 0.5583333333333332,
+          "accuracy_std": 0.019094065395649326,
+          "coverage": 1.0,
+          "family": "BasqueGLUE"
+        },
+        "BasqueGLUE_bec": {
+          "n": 80,
+          "accuracy": 0.33749999999999997,
+          "accuracy_std": 0.04506939094329988,
+          "coverage": 1.0,
+          "family": "BasqueGLUE"
+        },
+        "BasqueGLUE_wic": {
+          "n": 80,
+          "accuracy": 0.5083333333333333,
+          "accuracy_std": 0.014433756729740658,
+          "coverage": 1.0,
+          "family": "BasqueGLUE"
+        },
+        "BasqueGLUE_intent": {
+          "n": 80,
+          "accuracy": 0.7958333333333334,
+          "accuracy_std": 0.02602082499332663,
+          "coverage": 1.0,
+          "family": "BasqueGLUE"
+        },
+        "LatxaEval_eusexams": {
+          "n": 80,
+          "accuracy": 0.6083333333333334,
+          "accuracy_std": 0.04389855730355309,
+          "coverage": 1.0,
+          "family": "LatxaEvalSuite"
+        },
+        "LatxaEval_eusproficiency": {
+          "n": 80,
+          "accuracy": 0.44166666666666665,
+          "accuracy_std": 0.04389855730355306,
+          "coverage": 1.0,
+          "family": "LatxaEvalSuite"
+        },
+        "LatxaEval_eusreading": {
+          "n": 80,
+          "accuracy": 0.7041666666666666,
+          "accuracy_std": 0.05907269532815763,
+          "coverage": 1.0,
+          "family": "LatxaEvalSuite"
+        }
+      },
+      "by_family": {
+        "Core": {
+          "accuracy": 0.6875,
+          "accuracy_std": 0.0331013515820653,
+          "benchmarks": [
+            "EusTrivia",
+            "XNLIeu"
+          ]
+        },
+        "BasqueGLUE": {
+          "accuracy": 0.55,
+          "accuracy_std": 0.026154509515504125,
+          "benchmarks": [
+            "BasqueGLUE_qnli",
+            "BasqueGLUE_bec",
+            "BasqueGLUE_wic",
+            "BasqueGLUE_intent"
+          ]
+        },
+        "LatxaEvalSuite": {
+          "accuracy": 0.5847222222222223,
+          "accuracy_std": 0.04895660331175459,
           "benchmarks": [
             "LatxaEval_eusexams",
             "LatxaEval_eusproficiency",
