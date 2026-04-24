@@ -285,7 +285,7 @@
           <canvas id="barOverall"></canvas>
         </div>
         <div class="plot">
-          <h3>Figure 2. Accuracy profile by benchmark</h3>
+          <h3>Figure 2. Accuracy profile by eval</h3>
           <canvas id="radarBench"></canvas>
         </div>
         <div class="plot">
@@ -560,12 +560,12 @@
         }
       });
 
-      const radarLabels = familyIds.map(id => familyLabel(id));
+      const radarLabels = benchIds.map(id => benchLabel(id));
       const radarDatasets = rows.map((r, idx) => {
-        const f = r.by_family || {};
+        const b = r.by_benchmark || {};
         return {
           label: r.display_name,
-          data: familyIds.map(id => Math.round(((((f[id] || {}).accuracy) || 0) * 1000)) / 10),
+          data: benchIds.map(id => Math.round(((((b[id] || {}).accuracy) || 0) * 1000)) / 10),
           borderColor: colors[idx % colors.length],
           backgroundColor: 'transparent',
           borderWidth: 2,
