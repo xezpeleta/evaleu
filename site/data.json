@@ -1,7 +1,7 @@
 {
   "title": "Basque LLM Evaluation",
   "subtitle": "Comparative evaluation on EusTrivia, XNLIeu, BasqueGLUE-QNLI, BasqueGLUE-BEC, BasqueGLUE-WiC, BasqueGLUE-Intent, LatxaEval-EusExams, LatxaEval-EusProficiency, LatxaEval-EusReading (multi-seed robust view)",
-  "generated_at_utc": "2026-04-24T20:10:00.865749+00:00",
+  "generated_at_utc": "2026-04-24T21:21:37.249038+00:00",
   "endpoint": "${LLAMA_SWAP_BASE_URL}",
   "evaluation_protocol": {
     "suite": "Official benchmark subset (multi-seed)",
@@ -722,13 +722,13 @@
       "display_name": "Kimu 9B",
       "family": "Gemma-Kimu",
       "params": "9B",
-      "weights_quant": "Q8_0",
-      "kv_cache": "default",
+      "weights_quant": "F16",
+      "kv_cache": "f16/f16",
       "upstream_model_id": "orai-nlp/Gemma-Kimu-9b-it",
       "release_date_utc": "2025-10-06T13:19:11Z",
       "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-9b-it",
-      "overall_accuracy": 0.6226851851851852,
-      "overall_accuracy_std": 0.008371824685196788,
+      "overall_accuracy": 0.625,
+      "overall_accuracy_std": 0.011368545516489473,
       "n_items": 720,
       "n_seeds": 3,
       "seed_ids": [
@@ -739,8 +739,8 @@
       "by_benchmark": {
         "EusTrivia": {
           "n": 80,
-          "accuracy": 0.5625,
-          "accuracy_std": 0.04330127018922197,
+          "accuracy": 0.5708333333333333,
+          "accuracy_std": 0.0381881307912987,
           "coverage": 1.0,
           "family": "Core"
         },
@@ -753,43 +753,43 @@
         },
         "BasqueGLUE_qnli": {
           "n": 80,
-          "accuracy": 0.6708333333333334,
-          "accuracy_std": 0.019094065395649326,
+          "accuracy": 0.6666666666666666,
+          "accuracy_std": 0.014433756729740658,
           "coverage": 1.0,
           "family": "BasqueGLUE"
         },
         "BasqueGLUE_bec": {
           "n": 80,
           "accuracy": 0.47500000000000003,
-          "accuracy_std": 0.057282196186947985,
+          "accuracy_std": 0.0661437827766148,
           "coverage": 1.0,
           "family": "BasqueGLUE"
         },
         "BasqueGLUE_wic": {
           "n": 80,
-          "accuracy": 0.5041666666666667,
-          "accuracy_std": 0.03145764348029479,
+          "accuracy": 0.5125000000000001,
+          "accuracy_std": 0.021650635094610952,
           "coverage": 1.0,
           "family": "BasqueGLUE"
         },
         "BasqueGLUE_intent": {
           "n": 80,
-          "accuracy": 0.8583333333333334,
-          "accuracy_std": 0.019094065395649326,
+          "accuracy": 0.8624999999999999,
+          "accuracy_std": 0.012500000000000011,
           "coverage": 1.0,
           "family": "BasqueGLUE"
         },
         "LatxaEval_eusexams": {
           "n": 80,
-          "accuracy": 0.6083333333333334,
-          "accuracy_std": 0.04389855730355309,
+          "accuracy": 0.6083333333333333,
+          "accuracy_std": 0.0520416499866533,
           "coverage": 1.0,
           "family": "LatxaEvalSuite"
         },
         "LatxaEval_eusproficiency": {
           "n": 80,
-          "accuracy": 0.5083333333333333,
-          "accuracy_std": 0.02602082499332665,
+          "accuracy": 0.5125,
+          "accuracy_std": 0.024999999999999994,
           "coverage": 1.0,
           "family": "LatxaEvalSuite"
         },
@@ -803,16 +803,16 @@
       },
       "by_family": {
         "Core": {
-          "accuracy": 0.6520833333333333,
-          "accuracy_std": 0.031197667792435643,
+          "accuracy": 0.65625,
+          "accuracy_std": 0.02864109809347401,
           "benchmarks": [
             "EusTrivia",
             "XNLIeu"
           ]
         },
         "BasqueGLUE": {
-          "accuracy": 0.6270833333333334,
-          "accuracy_std": 0.03173199261463536,
+          "accuracy": 0.6291666666666667,
+          "accuracy_std": 0.028682043650241608,
           "benchmarks": [
             "BasqueGLUE_qnli",
             "BasqueGLUE_bec",
@@ -821,8 +821,8 @@
           ]
         },
         "LatxaEvalSuite": {
-          "accuracy": 0.5972222222222222,
-          "accuracy_std": 0.035806460765626595,
+          "accuracy": 0.598611111111111,
+          "accuracy_std": 0.038180549995551115,
           "benchmarks": [
             "LatxaEval_eusexams",
             "LatxaEval_eusproficiency",
@@ -1067,13 +1067,13 @@
       "display_name": "Kimu 2B",
       "family": "Gemma-Kimu",
       "params": "2B",
-      "weights_quant": "Q8_0",
-      "kv_cache": "default",
+      "weights_quant": "F16",
+      "kv_cache": "f16/f16",
       "upstream_model_id": "orai-nlp/Gemma-Kimu-2b-it",
       "release_date_utc": "2025-10-06T13:25:43Z",
       "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-2b-it",
-      "overall_accuracy": 0.4685185185185185,
-      "overall_accuracy_std": 0.00848625128695526,
+      "overall_accuracy": 0.4671296296296296,
+      "overall_accuracy_std": 0.010424379860368262,
       "n_items": 720,
       "n_seeds": 3,
       "seed_ids": [
@@ -1084,8 +1084,8 @@
       "by_benchmark": {
         "EusTrivia": {
           "n": 80,
-          "accuracy": 0.4666666666666666,
-          "accuracy_std": 0.02602082499332665,
+          "accuracy": 0.46249999999999997,
+          "accuracy_std": 0.03307189138830738,
           "coverage": 1.0,
           "family": "Core"
         },
@@ -1098,8 +1098,8 @@
         },
         "BasqueGLUE_qnli": {
           "n": 80,
-          "accuracy": 0.5708333333333333,
-          "accuracy_std": 0.019094065395649316,
+          "accuracy": 0.5625,
+          "accuracy_std": 0.012499999999999956,
           "coverage": 1.0,
           "family": "BasqueGLUE"
         },
@@ -1112,29 +1112,29 @@
         },
         "BasqueGLUE_wic": {
           "n": 80,
-          "accuracy": 0.48333333333333334,
-          "accuracy_std": 0.05204164998665334,
+          "accuracy": 0.48750000000000004,
+          "accuracy_std": 0.05448623679425842,
           "coverage": 1.0,
           "family": "BasqueGLUE"
         },
         "BasqueGLUE_intent": {
           "n": 80,
-          "accuracy": 0.5125000000000001,
-          "accuracy_std": 0.03307189138830741,
+          "accuracy": 0.5041666666666667,
+          "accuracy_std": 0.03145764348029479,
           "coverage": 1.0,
           "family": "BasqueGLUE"
         },
         "LatxaEval_eusexams": {
           "n": 80,
           "accuracy": 0.4625000000000001,
-          "accuracy_std": 0.037500000000000006,
+          "accuracy_std": 0.024999999999999994,
           "coverage": 1.0,
           "family": "LatxaEvalSuite"
         },
         "LatxaEval_eusproficiency": {
           "n": 80,
-          "accuracy": 0.45416666666666666,
-          "accuracy_std": 0.050518148554092236,
+          "accuracy": 0.4583333333333333,
+          "accuracy_std": 0.04732423621500226,
           "coverage": 1.0,
           "family": "LatxaEvalSuite"
         },
@@ -1148,16 +1148,16 @@
       },
       "by_family": {
         "Core": {
-          "accuracy": 0.4395833333333333,
-          "accuracy_std": 0.01926041249666332,
+          "accuracy": 0.4375,
+          "accuracy_std": 0.02278594569415368,
           "benchmarks": [
             "EusTrivia",
             "XNLIeu"
           ]
         },
         "BasqueGLUE": {
-          "accuracy": 0.48020833333333335,
-          "accuracy_std": 0.035598934390477184,
+          "accuracy": 0.47708333333333336,
+          "accuracy_std": 0.03415800276646296,
           "benchmarks": [
             "BasqueGLUE_qnli",
             "BasqueGLUE_bec",
@@ -1166,8 +1166,8 @@
           ]
         },
         "LatxaEvalSuite": {
-          "accuracy": 0.47222222222222227,
-          "accuracy_std": 0.04750146178278355,
+          "accuracy": 0.47361111111111115,
+          "accuracy_std": 0.04227015766975356,
           "benchmarks": [
             "LatxaEval_eusexams",
             "LatxaEval_eusproficiency",

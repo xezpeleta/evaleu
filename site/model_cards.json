@@ -3,21 +3,23 @@
     "display_name": "Kimu 2B",
     "family": "Gemma-Kimu",
     "params": "2B",
-    "weights_quant": "Q8_0",
-    "kv_cache": "default",
+    "weights_quant": "F16",
+    "kv_cache": "f16/f16",
     "upstream_model_id": "orai-nlp/Gemma-Kimu-2b-it",
     "release_date_utc": "2025-10-06T13:25:43Z",
-    "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-2b-it"
+    "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-2b-it",
+    "site_visibility": "published"
   },
   "kimu-9b": {
     "display_name": "Kimu 9B",
     "family": "Gemma-Kimu",
     "params": "9B",
-    "weights_quant": "Q8_0",
-    "kv_cache": "default",
+    "weights_quant": "F16",
+    "kv_cache": "f16/f16",
     "upstream_model_id": "orai-nlp/Gemma-Kimu-9b-it",
     "release_date_utc": "2025-10-06T13:19:11Z",
-    "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-9b-it"
+    "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-9b-it",
+    "site_visibility": "published"
   },
   "latxa-8b": {
     "display_name": "Latxa 8B",
@@ -110,5 +112,27 @@
     "release_date_utc": "2026-02-19T08:19:00Z",
     "release_source_url": "https://huggingface.co/HiTZ/Latxa-Qwen3-VL-32B-Instruct",
     "site_visibility": "published"
+  },
+  "kimu-2b-q8_0": {
+    "display_name": "Kimu 2B (Q8_0)",
+    "family": "Gemma-Kimu",
+    "params": "2B",
+    "weights_quant": "Q8_0",
+    "kv_cache": "default",
+    "upstream_model_id": "orai-nlp/Gemma-Kimu-2b-it",
+    "release_date_utc": "2025-10-06T13:25:43Z",
+    "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-2b-it",
+    "site_visibility": "draft"
+  },
+  "kimu-9b-q8_0": {
+    "display_name": "Kimu 9B (Q8_0)",
+    "family": "Gemma-Kimu",
+    "params": "9B",
+    "weights_quant": "Q8_0",
+    "kv_cache": "default",
+    "upstream_model_id": "orai-nlp/Gemma-Kimu-9b-it",
+    "release_date_utc": "2025-10-06T13:19:11Z",
+    "release_source_url": "https://huggingface.co/orai-nlp/Gemma-Kimu-9b-it",
+    "site_visibility": "draft"
   }
 }
