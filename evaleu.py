@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shlex
 import shutil
 import subprocess
 from datetime import datetime, timezone
@@ -235,6 +236,37 @@ def cmd_model(args: argparse.Namespace) -> int:
     return 0
 
 
+def _extract_model_from_tokens(tokens: list[str]) -> str | None:
+    for i, tok in enumerate(tokens):
+        if tok == "--model" and i + 1 < len(tokens):
+            return tokens[i + 1]
+        if tok.startswith("--model="):
+            return tok.split("=", 1)[1]
+    return None
+
+
+def detect_running_models(expected_models: list[str]) -> set[str]:
+    model_set = set(expected_models)
+    running: set[str] = set()
+    try:
+        ps_out = subprocess.check_output(["ps", "-eo", "args="], text=True)
+    except Exception:
+        return running
+
+    for line in ps_out.splitlines():
+        if ("evaleu.py eval" not in line) and ("eval/run_eval.py" not in line):
+            continue
+        try:
+            tokens = shlex.split(line)
+        except ValueError:
+            tokens = line.split()
+
+        model_id = _extract_model_from_tokens(tokens)
+        if model_id and model_id in model_set:
+            running.add(model_id)
+    return running
+
+
 def format_status_table(rows: list[dict], total_done: int, total_expected: int) -> str:
     headers = ["Model", "Runs", "Progress", "Status", "Missing seeds", "Last update (UTC)"]
     rendered_rows = []
@@ -294,12 +326,15 @@ def cmd_status(args: argparse.Namespace) -> int:
 
     model_rows: list[dict] = []
     done = 0
+    running_models = detect_running_models(models)
     for model_id in models:
         seeds_done = results_by_model.get(model_id, set())
         done_for_model = sum(1 for s in seeds if s in seeds_done)
         done += done_for_model
         missing = [s for s in seeds if s not in seeds_done]
-        if done_for_model == len(seeds) and len(seeds) > 0:
+        if model_id in running_models:
+            status = "running"
+        elif done_for_model == len(seeds) and len(seeds) > 0:
             status = "complete"
         elif done_for_model > 0:
             status = "partial"
@@ -313,6 +348,7 @@ def cmd_status(args: argparse.Namespace) -> int:
             "expected": len(seeds),
             "progress_percent": round((100.0 * done_for_model / len(seeds)), 1) if seeds else 0.0,
             "status": status,
+            "is_running": model_id in running_models,
             "missing_seeds": missing,
             "latest_result_mtime_utc": latest.isoformat() if latest else None,
         })
@@ -335,6 +371,7 @@ def cmd_status(args: argparse.Namespace) -> int:
         "progress_percent": pct,
         "summary_exists": (out_dir / "summary.json").exists(),
         "latest_result_mtime_utc": latest_mtime,
+        "running_models": sorted(running_models),
         "models": model_rows,
         "unexpected_models_with_results": unexpected_models,
     }
