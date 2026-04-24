@@ -78,15 +78,5 @@
     "upstream_model_id": "Qwen/Qwen3.5-27B",
     "release_date_utc": "2026-02-24T09:41:56Z",
     "release_source_url": "https://huggingface.co/Qwen/Qwen3.5-27B"
-  },
-  "qwen3.5-27b-eval": {
-    "display_name": "Qwen 3.5 27B (no-thinking)",
-    "family": "Qwen 3.5",
-    "params": "27B",
-    "weights_quant": "Q8_0",
-    "kv_cache": "bf16/bf16",
-    "upstream_model_id": "Qwen/Qwen3.5-27B",
-    "release_date_utc": "2026-02-24T09:41:56Z",
-    "release_source_url": "https://huggingface.co/Qwen/Qwen3.5-27B"
   }
 }
