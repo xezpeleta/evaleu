@@ -23,7 +23,6 @@ import json
 import os
 import shutil
 import subprocess
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -341,8 +340,10 @@ def cmd_status(args: argparse.Namespace) -> int:
     }
 
     table = format_status_table(model_rows, done, expected)
-    print(table, file=sys.stderr)
-    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    if args.json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        print(table)
     return 0
 
 
@@ -404,10 +405,11 @@ def build_parser() -> argparse.ArgumentParser:
     p_model.add_argument("--force", action="store_true")
     p_model.set_defaults(func=cmd_model)
 
-    p_status = sub.add_parser("status", help="Show overall JSON status plus per-model progress table from eval/<model>_seed<seed>.json files")
+    p_status = sub.add_parser("status", help="Show per-model progress table by default; use --json for machine-readable output")
     p_status.add_argument("--out-dir", default="eval")
     p_status.add_argument("--models-csv", default=None, help="Comma-separated expected models (default: model_cards)")
     p_status.add_argument("--seeds", default="42,123,777")
+    p_status.add_argument("--json", action="store_true", help="Output JSON instead of the default ASCII table")
     p_status.set_defaults(func=cmd_status)
 
     p_clean = sub.add_parser("clean", help="Remove local transient eval runtime artifacts")
