@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basque LLM Evaluation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #08090a;
+      --panel: #101214;
+      --panel-soft: #14171b;
+      --text: #f4f6f8;
+      --muted: #a4acb8;
+      --line: rgba(255,255,255,0.07);
+      --line-soft: rgba(255,255,255,0.05);
+      --accent: #7170ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 700px at 10% -20%, #1a1e2a 0%, #08090a 50%), var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      font-feature-settings: "cv01", "ss03";
+      line-height: 1.45;
+    }
+
+    .wrap {
+      width: min(1240px, 100% - 40px);
+      margin: 0 auto;
+      padding: 34px 0 76px;
+    }
+
+    .hero {
+      border: 1px solid var(--line-soft);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      padding: 22px 22px 16px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 42px;
+      font-weight: 600;
+      letter-spacing: -0.95px;
+      line-height: 1.02;
+      color: #f7f8f8;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: #c8ced8;
+      font-size: 14px;
+    }
+
+    .meta-inline {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .meta-card {
+      border: 1px solid var(--line-soft);
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      padding: 12px;
+      min-height: 80px;
+    }
+
+    .meta-k { font-size: 12px; color: var(--muted); }
+    .meta-v { margin-top: 3px; font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
+
+    .section {
+      margin-top: 16px;
+      border: 1px solid var(--line-soft);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 14px;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.22px;
+      color: #f2f4f7;
+    }
+
+    .section > h2 { margin: 0 0 10px; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0 0 10px;
+      flex-wrap: wrap;
+    }
+
+    .family-head {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .family-toggle {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: #d8deea;
+      border-radius: 6px;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 11px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .family-toggle.open {
+      background: rgba(124,140,255,0.18);
+      border-color: rgba(124,140,255,0.58);
+      color: #eef1ff;
+    }
+
+    .table-wrap {
+      border: 1px solid var(--line-soft);
+      border-radius: 10px;
+      overflow: auto;
+      background: #0f1114;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead th {
+      padding: 11px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(255,255,255,0.02);
+      color: #aeb6c2;
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.045em;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line-soft);
+      color: #e6eaf0;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: rgba(255,255,255,0.012); }
+
+    .model-main { font-weight: 500; }
+    .model-sub { color: #8f98a7; font-size: 12px; margin-top: 2px; }
+
+    .mono {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-block;
+      margin: 3px 6px 0 0;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: #cfd5df;
+      font-size: 11px;
+      white-space: nowrap;
+      background: rgba(255,255,255,0.01);
+    }
+
+    .strong { font-weight: 600; color: #ffffff; }
+
+    .caption {
+      margin-top: 10px;
+      color: #9ba4b3;
+      font-size: 12px;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .plot {
+      border: 1px solid var(--line-soft);
+      border-radius: 10px;
+      background: var(--panel-soft);
+      padding: 10px;
+      height: 390px;
+      overflow: hidden;
+    }
+
+    .plot h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #e9edf3;
+      letter-spacing: -0.1px;
+    }
+
+    .group-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      margin: 0 0 8px;
+      align-items: center;
+    }
+
+    .group-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #d8deea;
+      white-space: nowrap;
+    }
+
+    .group-legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(255,255,255,0.22);
+      display: inline-block;
+    }
+
+    .plot canvas {
+      width: 100% !important;
+      height: 330px !important;
+      max-height: 330px;
+      display: block;
+    }
+
+    .protocol-table td:first-child { white-space: nowrap; }
+
+    @media (max-width: 1040px) {
+      .meta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .chart-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .wrap { width: min(1240px, 100% - 22px); }
+      h1 { font-size: 34px; }
+      .meta-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1 id="title">Basque LLM Evaluation</h1>
+      <div class="subtitle" id="subtitle">A public benchmark dashboard for comparing local LLM performance in Basque language tasks.</div>
+      <div class="meta-inline" id="metaInline"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Table 1. Main comparative results</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr id="resultsHeadRow">
+              <th>#</th>
+              <th>Model</th>
+              <th>Quantization</th>
+              <th>Overall</th>
+              <th>Evals (grouped)</th>
+              <th>N</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </div>
+      <div class="caption" id="resultsCaption">Accuracy reported as mean ± std across random seeds.</div>
+    </section>
+
+    <section class="section">
+      <h2>Figures</h2>
+      <div class="chart-grid">
+        <div class="plot">
+          <h3>Figure 1. Overall accuracy by model</h3>
+          <div id="barGroupLegend" class="group-legend" aria-label="Figure 1 group legend"></div>
+          <canvas id="barOverall"></canvas>
+        </div>
+        <div class="plot">
+          <h3>Figure 2. Accuracy profile by eval</h3>
+          <canvas id="radarBench"></canvas>
+        </div>
+        <div class="plot">
+          <h3>Figure 3. Overall accuracy by release date</h3>
+          <canvas id="timelineOverall"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Evaluation protocol</h2>
+      <div class="table-wrap">
+        <table class="protocol-table">
+          <thead>
+            <tr>
+              <th>Family</th>
+              <th>Benchmark</th>
+              <th>What is measured</th>
+              <th>Metric</th>
+              <th>Label space</th>
+            </tr>
+          </thead>
+          <tbody id="protocolBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const pct = (x) => ((x || 0) * 100).toFixed(1) + '%';
+    const pctPM = (mean, std) => `${((mean || 0) * 100).toFixed(1)}% ± ${((std || 0) * 100).toFixed(1)}%`;
+    const metricCell = (mean, std) => {
+      const shortV = pct(mean);
+      const fullV = pctPM(mean, std);
+      return `<span title="${esc(fullV)}">${esc(shortV)}</span>`;
+    };
+    const benchLabel = (id) => ({
+      'BasqueGLUE_qnli': 'BasqueGLUE-QNLI',
+      'BasqueGLUE_bec': 'BasqueGLUE-BEC',
+      'BasqueGLUE_wic': 'BasqueGLUE-WiC',
+      'BasqueGLUE_intent': 'BasqueGLUE-Intent',
+      'LatxaEval_eusexams': 'LatxaEval-EusExams',
+      'LatxaEval_eusproficiency': 'LatxaEval-EusProficiency',
+      'LatxaEval_eusreading': 'LatxaEval-EusReading'
+    }[id] || id);
+
+    const familyLabel = (id) => ({
+      'Core': 'Core',
+      'BasqueGLUE': 'BasqueGLUE',
+      'LatxaEvalSuite': 'LatxaEvalSuite'
+    }[id] || id);
+
+    const benchHeaderHTML = (id) => {
+      const label = benchLabel(id);
+      const idx = label.indexOf('-');
+      if (idx > 0) {
+        return `${esc(label.slice(0, idx))}<br>${esc(label.slice(idx + 1))}`;
+      }
+      return esc(label);
+    };
+
+    const familyHeaderHTML = (id) => {
+      const label = familyLabel(id);
+      const idx = label.indexOf('-');
+      if (idx > 0) {
+        return `${esc(label.slice(0, idx))}<br>${esc(label.slice(idx + 1))}`;
+      }
+      return esc(label);
+    };
+
+    const compactModelLabel = (name) => {
+      const v = String(name || '');
+      if (v.includes('Qwen 3.5 27B')) return 'Qwen 3.5 27B';
+      return v;
+    };
+    const formatUtcDate = (iso) => {
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return String(iso || '-');
+      return d.toISOString().slice(0, 10);
+    };
+
+    fetch('./data.json').then(r => r.json()).then(data => {
+      const rows = data.results || [];
+      document.getElementById('title').textContent = data.title || 'Basque LLM Evaluation';
+      document.getElementById('subtitle').textContent = 'A public benchmark dashboard for comparing local LLM performance in Basque language tasks.';
+
+      const nSeeds = rows.length ? (rows[0].n_seeds || 1) : 1;
+      const generatedUtc = data.generated_at_utc || '-';
+      const generatedDate = formatUtcDate(generatedUtc);
+      const benchDefs = (data.evaluation_protocol?.benchmarks || []);
+      const benchIds = benchDefs.map(x => x.id);
+      const familyDefs = (data.evaluation_protocol?.benchmark_families || []);
+      const familyIds = familyDefs.map(x => x.id);
+
+      document.getElementById('metaInline').innerHTML = `
+        <span>Generated: <span class="mono">${esc(generatedDate)}</span></span>
+        <span>Seeds: <span class="mono">n=${esc(nSeeds)}</span></span>
+      `;
+
+      const head = document.getElementById('resultsHeadRow');
+      const body = document.getElementById('resultsBody');
+      const caption = document.getElementById('resultsCaption');
+
+      const expandedFamilies = new Set();
+      const familyBenchMap = Object.fromEntries(
+        familyDefs.map(fd => [fd.id, (fd.benchmarks || []).map(b => b.id)])
+      );
+
+      const bestOverall = Math.max(...rows.map(r => r.overall_accuracy || 0));
+      const bestByFamily = Object.fromEntries(
+        familyIds.map(id => [id, Math.max(...rows.map(r => ((r.by_family || {})[id] || {}).accuracy || 0))])
+      );
+      const bestByBench = Object.fromEntries(
+        benchIds.map(id => [id, Math.max(...rows.map(r => ((r.by_benchmark || {})[id] || {}).accuracy || 0))])
+      );
+      const isBest = (v, best) => Math.abs((v || 0) - (best || 0)) < 1e-12;
+
+      const renderResultsTable = () => {
+        const expandedBenchIds = familyDefs.flatMap(fd => (
+          expandedFamilies.has(fd.id) ? (familyBenchMap[fd.id] || []) : []
+        ));
+
+        head.innerHTML = `
+          <th>#</th>
+          <th>Model</th>
+          <th>Quantization</th>
+          <th>Overall</th>
+          ${familyDefs.map(fd => {
+            const open = expandedFamilies.has(fd.id);
+            const hasDetails = (familyBenchMap[fd.id] || []).length > 0;
+            const icon = open ? '▾' : '▸';
+            const toggleTitle = `${open ? 'Hide' : 'Show'} ${familyLabel(fd.id)} details`;
+            const familyTh = `<th><span class="family-head">${familyHeaderHTML(fd.id)}${hasDetails ? `<button class="family-toggle ${open ? 'open' : ''}" data-toggle-family="${esc(fd.id)}" type="button" title="${esc(toggleTitle)}" aria-label="${esc(toggleTitle)}">${icon}</button>` : ''}</span></th>`;
+            const detailThs = open ? (familyBenchMap[fd.id] || []).map(bid => `<th>${benchHeaderHTML(bid)}</th>`).join('') : '';
+            return familyTh + detailThs;
+          }).join('')}
+          <th>N</th>
+        `;
+
+        head.querySelectorAll('button[data-toggle-family]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const fam = btn.getAttribute('data-toggle-family');
+            if (expandedFamilies.has(fam)) expandedFamilies.delete(fam);
+            else expandedFamilies.add(fam);
+            renderResultsTable();
+          });
+        });
+
+        body.innerHTML = rows.map((r, i) => {
+          const quantLabels = [];
+          if (r.weights_quant) quantLabels.push(String(r.weights_quant).toUpperCase());
+          const byFam = r.by_family || {};
+          const byBench = r.by_benchmark || {};
+
+          const familyAndBenchCells = familyDefs.map(fd => {
+            const fam = byFam[fd.id] || {};
+            const famCell = isBest(fam.accuracy, bestByFamily[fd.id])
+              ? `<td><span class="strong">${metricCell(fam.accuracy || 0, fam.accuracy_std || 0)}</span></td>`
+              : `<td>${metricCell(fam.accuracy || 0, fam.accuracy_std || 0)}</td>`;
+
+            if (!expandedFamilies.has(fd.id)) return famCell;
+
+            const benchCells = (familyBenchMap[fd.id] || []).map(bid => {
+              const bm = byBench[bid] || {};
+              const inner = metricCell(bm.accuracy || 0, bm.accuracy_std || 0);
+              return isBest(bm.accuracy, bestByBench[bid])
+                ? `<td><span class="strong">${inner}</span></td>`
+                : `<td>${inner}</td>`;
+            }).join('');
+
+            return famCell + benchCells;
+          }).join('');
+
+          return `
+            <tr>
+              <td>${i + 1}</td>
+              <td>
+                <div class="model-main">${esc(r.display_name)}</div>
+                <div class="model-sub mono">${esc(r.model_id)}</div>
+              </td>
+              <td>${quantLabels.map(q => `<span class="pill">${esc(q)}</span>`).join('')}</td>
+              <td>${isBest(r.overall_accuracy, bestOverall) ? `<span class="strong">${metricCell(r.overall_accuracy, r.overall_accuracy_std)}</span>` : metricCell(r.overall_accuracy, r.overall_accuracy_std)}</td>
+              ${familyAndBenchCells}
+              <td>${esc(r.n_items)}</td>
+            </tr>
+          `;
+        }).join('');
+
+        const totalDetailCols = expandedBenchIds.length;
+        caption.textContent = totalDetailCols
+          ? `Grouped evals shown by family; ${totalDetailCols} benchmark detail columns expanded (mean ± std on hover).`
+          : `Grouped evals shown by family; benchmark detail columns are collapsed by default (mean ± std on hover).`;
+      };
+
+      renderResultsTable();
+
+      const protocolBody = document.getElementById('protocolBody');
+      (data.evaluation_protocol?.benchmarks || []).forEach(x => {
+        protocolBody.innerHTML += `
+          <tr>
+            <td class="mono">${esc(x.family || '-')}</td>
+            <td class="mono">${esc(benchLabel(x.id))}</td>
+            <td>${esc(x.task)}</td>
+            <td>${esc(x.metric)}</td>
+            <td>${esc(x.labels)}</td>
+          </tr>
+        `;
+      });
+
+      const labels = rows.map(r => compactModelLabel(r.display_name));
+      const fullLabels = rows.map(r => r.display_name);
+      const overall = rows.map(r => Math.round((r.overall_accuracy || 0) * 1000) / 10);
+
+      if (window.__barChart) window.__barChart.destroy();
+      if (window.__radarChart) window.__radarChart.destroy();
+      if (window.__timelineChart) window.__timelineChart.destroy();
+
+      const sizeCategoryColors = {
+        '<4B': '#2563eb',   // vivid blue
+        '7-9B': '#f97316',  // vivid orange
+        '27-32B': '#16a34a',// vivid green
+        '70B': '#a855f7',   // vivid purple
+        'other': '#94a3b8'
+      };
+
+      const inferModelSizeB = (row) => {
+        const txt = `${row?.display_name || ''} ${row?.model_id || ''}`;
+        const m = txt.match(/(\d+(?:\.\d+)?)\s*[bB]\b/);
+        return m ? Number(m[1]) : null;
+      };
+
+      const modelSizeCategory = (row) => {
+        const s = inferModelSizeB(row);
+        if (s == null) return 'other';
+        if (s <= 4) return '<4B';
+        if (s >= 7 && s <= 9) return '7-9B';
+        if (s >= 27 && s <= 32) return '27-32B';
+        if (s >= 70) return '70B';
+        return 'other';
+      };
+
+      const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+      const shadeHex = (hex, delta) => {
+        const h = (hex || '').replace('#', '');
+        if (!/^[0-9a-fA-F]{6}$/.test(h)) return hex;
+        const toCh = (i) => parseInt(h.slice(i, i + 2), 16);
+        const apply = (c) => {
+          const out = delta >= 0
+            ? c + (255 - c) * delta
+            : c * (1 + delta);
+          return clamp(Math.round(out), 0, 255).toString(16).padStart(2, '0');
+        };
+        return `#${apply(toCh(0))}${apply(toCh(2))}${apply(toCh(4))}`;
+      };
+
+      const rowKey = (r) => `${r?.model_id || ''}::${r?.display_name || ''}`;
+      const groupedRows = rows.reduce((acc, r) => {
+        const g = modelSizeCategory(r);
+        (acc[g] ||= []).push(r);
+        return acc;
+      }, {});
+
+      const modelColorMap = new Map();
+      Object.entries(groupedRows).forEach(([group, groupRows]) => {
+        const base = sizeCategoryColors[group] || sizeCategoryColors.other;
+        const n = groupRows.length;
+        groupRows.forEach((r, idx) => {
+          // Keep groups distinct (base hue), then vary shade per model in the same group.
+          const delta = n <= 1 ? 0 : ((idx / (n - 1)) - 0.5) * 0.46; // ~[-0.23, +0.23]
+          modelColorMap.set(rowKey(r), shadeHex(base, delta));
+        });
+      });
+
+      const rowColor = (r) => modelColorMap.get(rowKey(r)) || (sizeCategoryColors[modelSizeCategory(r)] || sizeCategoryColors.other);
+      const barColors = rows.map(r => rowColor(r));
+
+      const groupLegendOrder = ['<4B', '7-9B', '27-32B', '70B'];
+      const barGroupLegend = document.getElementById('barGroupLegend');
+      if (barGroupLegend) {
+        barGroupLegend.innerHTML = groupLegendOrder.map(label => `
+          <span class="group-legend-item">
+            <span class="group-legend-swatch" style="background:${sizeCategoryColors[label]}"></span>
+            ${esc(label)}
+          </span>
+        `).join('');
+      }
+
+      window.__barChart = new Chart(document.getElementById('barOverall').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            data: overall,
+            backgroundColor: barColors,
+            borderWidth: 0,
+            borderRadius: 6,
+            barPercentage: 0.72,
+            categoryPercentage: 0.78
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: (items) => {
+                  const idx = items?.[0]?.dataIndex ?? 0;
+                  return fullLabels[idx] || labels[idx] || '';
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#d4dbe7', maxRotation: 22, minRotation: 22, font: { size: 11 } },
+              grid: { color: 'rgba(255,255,255,0.05)' }
+            },
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: { color: '#d4dbe7', font: { size: 11 } },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            }
+          }
+        }
+      });
+
+      const radarLabels = benchIds.map(id => benchLabel(id));
+      const radarDatasets = rows.map((r, idx) => {
+        const b = r.by_benchmark || {};
+        return {
+          label: r.display_name,
+          data: benchIds.map(id => Math.round(((((b[id] || {}).accuracy) || 0) * 1000)) / 10),
+          borderColor: barColors[idx] || sizeCategoryColors.other,
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          pointRadius: 2.2,
+          pointHoverRadius: 2.8
+        };
+      });
+
+      window.__radarChart = new Chart(document.getElementById('radarBench').getContext('2d'), {
+        type: 'radar',
+        data: { labels: radarLabels, datasets: radarDatasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: '#d8deea',
+                boxWidth: 10,
+                boxHeight: 10,
+                padding: 10,
+                font: { size: 11 }
+              }
+            }
+          },
+          scales: {
+            r: {
+              min: 0,
+              max: 100,
+              ticks: {
+                stepSize: 20,
+                color: '#cfd6e3',
+                backdropColor: 'rgba(0,0,0,0)',
+                font: { size: 11 }
+              },
+              pointLabels: {
+                color: '#dce3ef',
+                font: { size: 12, weight: 500 }
+              },
+              grid: { color: 'rgba(255,255,255,0.10)' },
+              angleLines: { color: 'rgba(255,255,255,0.10)' }
+            }
+          },
+          layout: { padding: 4 }
+        }
+      });
+
+      const timelineRows = rows
+        .filter(r => r.release_date_utc)
+        .map(r => ({
+          name: compactModelLabel(r.display_name),
+          fullName: r.display_name,
+          date: formatUtcDate(r.release_date_utc),
+          score: Math.round((r.overall_accuracy || 0) * 1000) / 10,
+          std: Math.round((r.overall_accuracy_std || 0) * 1000) / 10,
+          color: rowColor(r)
+        }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      if (timelineRows.length) {
+        const pointLabelPlugin = {
+          id: 'timelinePointLabels',
+          afterDatasetsDraw(chart) {
+            const { ctx } = chart;
+            const meta = chart.getDatasetMeta(0);
+            ctx.save();
+            ctx.font = '11px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#d8deea';
+            meta.data.forEach((pt, i) => {
+              const x = pt.x + 6;
+              const y = pt.y - 8;
+              ctx.fillText(timelineRows[i].name, x, y);
+            });
+            ctx.restore();
+          }
+        };
+
+        window.__timelineChart = new Chart(document.getElementById('timelineOverall').getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: timelineRows.map(x => x.date),
+            datasets: [{
+              label: 'Overall accuracy',
+              data: timelineRows.map(x => x.score),
+              showLine: false,
+              borderWidth: 0,
+              pointBackgroundColor: timelineRows.map(x => x.color),
+              pointBorderColor: timelineRows.map(x => x.color),
+              pointRadius: 4,
+              pointHoverRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  title: (items) => {
+                    const idx = items?.[0]?.dataIndex ?? 0;
+                    return timelineRows[idx]?.fullName || '';
+                  },
+                  label: (item) => {
+                    const idx = item?.dataIndex ?? 0;
+                    const r = timelineRows[idx];
+                    return `${r.date} · ${r.score.toFixed(1)}% ± ${r.std.toFixed(1)}%`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                title: { display: true, text: 'Release date (UTC)', color: '#cfd6e3' },
+                ticks: { color: '#d4dbe7', maxRotation: 0, minRotation: 0, font: { size: 11 } },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+              },
+              y: {
+                position: 'left',
+                beginAtZero: true,
+                max: 100,
+                title: { display: true, text: 'Overall accuracy (%)', color: '#cfd6e3' },
+                ticks: { color: '#d4dbe7', font: { size: 11 } },
+                grid: { color: 'rgba(255,255,255,0.06)' }
+              }
+            }
+          },
+          plugins: [pointLabelPlugin]
+        });
+      }
+    }).catch(err => {
+      document.getElementById('subtitle').textContent = 'Failed to load data.json';
+      document.getElementById('metaInline').innerHTML = `<span class="mono">${esc(String(err))}</span>`;
+    });
+  </script>
+</body>
+</html>
