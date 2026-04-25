@@ -117,7 +117,7 @@ def _extract_answer(msg: Dict[str, Any]) -> str:
     return lines[-1] if lines else ""
 
 
-def chat_completion(base_url: str, model: str, prompt: str, temperature: float, max_tokens: int, timeout: int = 90, retries: int = 2) -> str:
+def chat_completion(base_url: str, api_key: str, model: str, prompt: str, temperature: float, max_tokens: int, timeout: int = 90, retries: int = 2) -> str:
     url = base_url.rstrip("/") + "/v1/chat/completions"
     payload = {
         "model": model,
@@ -136,9 +136,10 @@ def chat_completion(base_url: str, model: str, prompt: str, temperature: float, 
     }
 
     last_err = None
+    headers = {"Authorization": f"Bearer {api_key}"} if api_key else None
     for attempt in range(retries + 1):
         try:
-            r = requests.post(url, json=payload, timeout=timeout)
+            r = requests.post(url, json=payload, headers=headers, timeout=timeout)
             r.raise_for_status()
             data = r.json()
             msg = data["choices"][0]["message"]
@@ -170,7 +171,13 @@ def _load_dotenv(repo_root: Path) -> None:
 def _resolve_base_url(cli_base_url: str | None) -> str:
     if cli_base_url:
         return cli_base_url
-    return os.environ.get("LLAMA_SWAP_BASE_URL", "http://127.0.0.1:8080")
+    return os.environ.get("OPENAI_API_BASE", "http://127.0.0.1:8080")
+
+
+def _resolve_api_key(cli_api_key: str | None) -> str:
+    if cli_api_key is not None:
+        return cli_api_key
+    return os.environ.get("OPENAI_API_KEY", "")
 
 
 def _max_tokens_for_model(model: str, cli_max_tokens: int | None) -> int:
@@ -185,8 +192,9 @@ def main():
     repo_root = Path(__file__).resolve().parents[1]
     _load_dotenv(repo_root)
 
-    ap = argparse.ArgumentParser(description="MVP Basque eval runner for llama-swap OpenAI-compatible endpoint")
-    ap.add_argument("--base-url", default=None, help="llama-swap base URL (if omitted uses LLAMA_SWAP_BASE_URL from .env)")
+    ap = argparse.ArgumentParser(description="MVP Basque eval runner for OpenAI-compatible endpoints")
+    ap.add_argument("--base-url", default=None, help="API base URL (if omitted uses OPENAI_API_BASE from .env)")
+    ap.add_argument("--api-key", default=None, help="API key (if omitted uses OPENAI_API_KEY from .env)")
     ap.add_argument("--model", default="kimu-9b", help="model id")
     ap.add_argument("--dataset", default="eval/basque_mvp_dataset.jsonl", help="jsonl dataset path")
     ap.add_argument("--temperature", type=float, default=0.0)
@@ -195,6 +203,7 @@ def main():
     args = ap.parse_args()
 
     base_url = _resolve_base_url(args.base_url)
+    api_key = _resolve_api_key(args.api_key)
     max_tokens = _max_tokens_for_model(args.model, args.max_tokens)
 
     items = load_jsonl(args.dataset)
@@ -203,6 +212,7 @@ def main():
     for i, item in enumerate(items, 1):
         ans = chat_completion(
             base_url=base_url,
+            api_key=api_key,
             model=args.model,
             prompt=item["prompt_eu"],
             temperature=args.temperature,

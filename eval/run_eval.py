@@ -31,7 +31,13 @@ def _load_dotenv(repo_root: Path) -> None:
 def _resolve_base_url(cli_base_url: str | None) -> str:
     if cli_base_url:
         return cli_base_url
-    return os.environ.get("LLAMA_SWAP_BASE_URL", "http://127.0.0.1:8080")
+    return os.environ.get("OPENAI_API_BASE", "http://127.0.0.1:8080")
+
+
+def _resolve_api_key(cli_api_key: str | None) -> str:
+    if cli_api_key is not None:
+        return cli_api_key
+    return os.environ.get("OPENAI_API_KEY", "")
 
 
 def _max_tokens_for_model(model: str, cli_max_tokens: int | None) -> int:
@@ -68,6 +74,7 @@ def _extract_answer(msg: Dict[str, Any]) -> str:
 
 def chat_completion(
     base_url: str,
+    api_key: str,
     model: str,
     prompt: str,
     temperature: float,
@@ -96,9 +103,10 @@ def chat_completion(
         payload["chat_template_kwargs"] = {"enable_thinking": False}
 
     last_err = None
+    headers = {"Authorization": f"Bearer {api_key}"} if api_key else None
     for attempt in range(retries + 1):
         try:
-            r = requests.post(url, json=payload, timeout=timeout)
+            r = requests.post(url, json=payload, headers=headers, timeout=timeout)
             r.raise_for_status()
             data = r.json()
             msg = data["choices"][0]["message"]
@@ -109,7 +117,7 @@ def chat_completion(
             if (not (msg.get("content") or "").strip()) and finish == "length" and max_tokens < 8192:
                 payload2 = dict(payload)
                 payload2["max_tokens"] = min(8192, max_tokens * 2)
-                r2 = requests.post(url, json=payload2, timeout=timeout)
+                r2 = requests.post(url, json=payload2, headers=headers, timeout=timeout)
                 r2.raise_for_status()
                 data2 = r2.json()
                 msg2 = data2["choices"][0]["message"]
@@ -711,7 +719,8 @@ def main():
     _load_dotenv(repo_root)
 
     ap = argparse.ArgumentParser(description="Official Phase-1 Basque benchmark runner")
-    ap.add_argument("--base-url", default=None)
+    ap.add_argument("--base-url", default=None, help="API base URL (if omitted uses OPENAI_API_BASE from .env)")
+    ap.add_argument("--api-key", default=None, help="API key (if omitted uses OPENAI_API_KEY from .env)")
     ap.add_argument("--model", required=True)
     ap.add_argument("--temperature", type=float, default=0.0)
     ap.add_argument("--max-tokens", type=int, default=None)
@@ -737,6 +746,7 @@ def main():
     args = ap.parse_args()
 
     base_url = _resolve_base_url(args.base_url)
+    api_key = _resolve_api_key(args.api_key)
     max_tokens = _max_tokens_for_model(args.model, args.max_tokens)
     timeout = _timeout_for_model(args.model, args.timeout)
 
@@ -746,6 +756,7 @@ def main():
     for i, it in enumerate(items, 1):
         ans = chat_completion(
             base_url,
+            api_key,
             args.model,
             it["prompt"],
             args.temperature,
@@ -759,7 +770,7 @@ def main():
 
     summary = aggregate(preds)
     out = {
-        "base_url": "${LLAMA_SWAP_BASE_URL}",
+        "base_url": "${OPENAI_API_BASE}",
         "model": args.model,
         "suite": "evaleu",
         "max_tokens": max_tokens,

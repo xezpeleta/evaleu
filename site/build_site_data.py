@@ -210,7 +210,7 @@ def main():
         "title": "Basque LLM Evaluation",
         "subtitle": f"Comparative evaluation on {benchmark_label_list} (multi-seed robust view)",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "endpoint": "${LLAMA_SWAP_BASE_URL}",
+        "endpoint": "${OPENAI_API_BASE}",
         "evaluation_protocol": {
             "suite": "Official benchmark subset (multi-seed)",
             "metric": "Accuracy",

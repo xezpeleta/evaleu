@@ -50,6 +50,6 @@ If you want a different Benchmark-4 in the future:
 
 ## Notes
 
-- Keep endpoint private (`LLAMA_SWAP_BASE_URL` via `.env`).
+- Keep endpoint private (`OPENAI_API_BASE` via `.env`).
 - qwen no-thinking control remains active in chat payload.
 - Registry-based `limits` auto-reflect enabled benchmarks.

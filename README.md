@@ -1,6 +1,6 @@
 # Basque LLM Evaluation (single-CLI workflow)
 
-This repo benchmarks Basque-capable local LLMs served through private llama-swap and publishes a static comparison website.
+This repo benchmarks Basque-capable local LLMs served through a private OpenAI-compatible endpoint and publishes a static comparison website.
 
 The operational interface is **one CLI**:
 
@@ -93,6 +93,7 @@ For `qwen3.5-27b`, eval uses no-thinking mode (`--max-tokens 4096 --timeout 300`
 Commit + push to `main`. GitHub Actions auto-deploys `site/` to `gh-pages`.
 
 ## Privacy
-- Keep endpoint in local `.env` (`LLAMA_SWAP_BASE_URL=...`)
+- Keep endpoint in local `.env` (`OPENAI_API_BASE=...`)
+- Keep auth token in local `.env` (`OPENAI_API_KEY=`; empty for local/no-auth endpoints)
 - Never commit private endpoint URLs
 - Tracked artifacts must use placeholders where needed
